@@ -1,0 +1,24 @@
+# This file describes how the application works
+
+Technologies :
+	•
+
+Data type :
+	How to identify a meal recipe on a web page :
+		• A list (<ul> <li>) with the word "Ingredients" near it (required)
+		• Words like "recipe", "chocolate", "fouetter", "oeufs", "recette" etc.
+		•
+
+
+Server side :
+	Contains the database.
+	We may execute some scripts to (remotely) fill the database.
+	We can remotely access the database from a client to search
+	and download new recipes.
+
+Client side :
+	Contains the user interface to access to the database remotely
+	and search recipes.
+	All the recipes accessed are downloaded on the client to be
+	accessed offline.
+

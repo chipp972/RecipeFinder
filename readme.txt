@@ -1,5 +1,5 @@
 Recipe Finder
-Version : 0.1
+Version : 1.0
 Author : Pierre-charles Nicolas
 E-mail : pierrecharles.nicolas@gmail.com
 Lastest release : 15/10/2015

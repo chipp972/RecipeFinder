@@ -1,0 +1,9 @@
+# This file describes the database tables (LMD)
+
+Sites
+
+Users
+
+Recipes(!id, name, type, photo)
+
+Ingredients(!id, name)
