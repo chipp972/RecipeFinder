@@ -1,5 +1,6 @@
 # This file describes the different algorithms used
 
+Brief : Add urls to database (Web Crawler)
 Function 0 :
 	Input : nothing
 	Output : number of added lines to the database (integer)
@@ -10,6 +11,7 @@ Function 0 :
 					 right table ("recipe_url" or "not_recipe_url")
 					 according to Function 1.
 
+Brief : Find out if a web page contains a recipe (Web Crawler)
 Function 1 :
 	Input : web page (string)
 	Output : if the web page contains a recipe (boolean)
@@ -17,9 +19,15 @@ Function 1 :
 					 in a table "url_to_treat" if it's not yet in the database.
 				  2) Determine if the web page contains a recipe and returns a boolean.
 
+Brief : Fill the database with a recipe's data from a web page content (Web Crawler)
 Function 2 :
 	Input : web page (string)
 	Output : number of added lines in the db (integer)
 	Description : Extract the recipe from the web page and fill the tables "recipes"
 				  and "ingredients" accordingly.
 
+Brief : Search recipes in the database according to what other user's like,
+		ingredients given, etc. (Server)
+Recommandation engine
+
+Brief :

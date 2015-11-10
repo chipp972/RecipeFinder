@@ -1,9 +1,27 @@
 # This file describes the database tables (LMD)
 
-Sites
+URLToTreat(id*, url)
 
-Users
+NoRecipeURL(id*, url)
 
-Recipes(!id, name, type, photo)
+RecipeURL(id*, url)
 
-Ingredients(!id, name)
+Types(id*, name)
+
+Recipes(id*, name, photo, url#, type#)
+
+Ingredients(id*, name)
+
+Users(id*, e-mail, name, birth date)
+
+IngredientIsSameAsIngredient((idIngr#, idIngr#)*)
+
+Opinions(id*, mark, comment, author#, recipe#)
+
+RecipeHasIngredient((idRecipe#, idIngr#)*)
+
+UserHasCurrentlyIngredient((idUser#, idIngr#)*)
+
+UserHasFavoriteIngredient((idUser#, idIngr#)*)
+
+UserHasForbiddenIngredient((idUser#, idIngr#)*)

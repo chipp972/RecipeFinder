@@ -1,6 +1,6 @@
 # This file describres the screens in the user interface
 
-User Interface :
+Main Menu :
 	• User informations
 	• Search [Need connexion]
 		• Recipe(s) [Need connexion]
@@ -14,6 +14,7 @@ User Informations :
 	• Age
 	• favorite meals
 	• favorite ingredients
+	• forbidden ingredients
 	• current ingredients
 
 Search specific informations : (gives multiple tiles of recipes)
