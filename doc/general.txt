@@ -1,16 +1,16 @@
 # This file describes how the application works
 
 Program parts and Technologies :
-	• Relational Database (Mysql)
-	• Persistent Server (Java)
-	• Client (Java)
-	• Web Crawler (Python)
+	- Relational Database (Mysql)
+	- Persistent Server (Java) + Recommandation Engine (Python)
+	- Client (Java)
+	- Web Crawler (Python)
 
 Data type :
 	How to identify a meal recipe on a web page :
-		• A list (<ul> <li>) with the word "Ingredients" near it (required)
-		• Words like "recipe", "chocolate", "mélanger", "oeufs", "recette" etc.
-		•
+		- A list (<ul> <li>) with the word "Ingredients" near it (required)
+		- Words like "recipe", "chocolate", "melanger", "oeufs", "recette" etc.
+		-
 
 Server side :
 	Contains the mysql database because there are a small quantity of data and users
@@ -28,5 +28,5 @@ Client side :
 	"user informations", ...
 
 Web Crawler script :
-	- Avoir une table de correspondance, d'ingrédients pour pouvoir avoir un minimum
-	de doublons
+	- Avoir une table de correspondance, d'ingredients pour pouvoir avoir un
+	minimum de doublons.

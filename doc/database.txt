@@ -14,8 +14,6 @@ Ingredients(id*, name)
 
 Users(id*, e-mail, name, birth date)
 
-IngredientIsSameAsIngredient((idIngr#, idIngr#)*)
-
 Opinions(id*, mark, comment, author#, recipe#)
 
 RecipeHasIngredient((idRecipe#, idIngr#)*)
