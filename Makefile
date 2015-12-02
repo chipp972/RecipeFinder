@@ -8,6 +8,8 @@ sync:
 	cp -rf src/www/* C:/wamp/www/RecipeFinder/
 	# init the database
 	mysql -u recipe_finder_manager recipe_finder_db < src/db/init_db.sql
+	# fill the database
+	mysql -u recipe_finder_manager recipe_finder_db < src/db/fill_db.sql
 
 test:
 	sh tst/test.sh
