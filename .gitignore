@@ -45,4 +45,5 @@ Temporary Items
 # IDE specific files
 process-palette.json
 .remote-sync.json
-Makefile
+**/Makefile
+**/Makefile.in
