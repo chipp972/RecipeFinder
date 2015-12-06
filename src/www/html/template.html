@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recipe Finder</title>
+    <link href="../www/css/bootstrap.min.css" rel="stylesheet">
+		<link href="../www/css/index.css" rel="stylsheet">
+	</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Recipe Finder</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="#" data-toggle="modal" data-target="#search"><span class="glyphicon glyphicon-search"></span>Search</a></li>
+        <li><a href="#" data-toggle="modal" data-target="#fav"><span class="glyphicon glyphicon-star"></span>Favorites</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Main content -->
+<div class="container-fluid text-center">
+  <div class="row content">
+
+    <!-- Left part -->
+    <div class="col-sm-2 sidenav">
+      $left
+    </div>
+
+    <!-- Middle part -->
+    <div class="col-sm-8 text-left">
+      <h2>$title</h2>
+      <hr>
+      $middle
+    </div>
+
+    <!-- Right part -->
+    <div class="col-sm-2 text-center"></div>
+      $right
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="container-fluid text-center">
+  <hr>
+  <p>Data Mining Project 2015 - COTTIN Kevin - LI Luting - PIERRE-CHARLES Nicolas</p>
+</footer>
+
+<!-- Authentication Modal -->
+<div class="modal fade" id="search" tabindex="-1" role="dialog" aria-labelledby="authModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title" id="authModal">Authentification</h4>
+      </div>
+    <div class="modal-body">
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="email">Email:</label>
+          <div class="col-sm-10">
+          <input type="email" class="form-control" id="email" placeholder="Enter email">
+          </div>
+          <label class="control-label col-sm-2" for="password">Pass:</label>
+          <div class="col-sm-10">
+          <input type="password" class="form-control" id="password" placeholder="************************">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary" class="btn btn-success" data-toggle="modal" data-target="#search-form" data-dismiss="modal">Next ></button>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- Search Form Modal -->
+<div class="modal fade" id="search-form" tabindex="-1" role="dialog" aria-labelledby="authModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title" id="authModal">What do you want to cook ?</h4>
+      </div>
+      <form class="form-horizontal" role="form" action="../cgi_bin/rec_engine.py" method="POST">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="type">Type:</label>
+          <div class="col-sm-10">
+            <select class="form-control" id="type">
+              <option>Entree</option>
+              <option>Main dish</option>
+              <option>Dessert</option>
+              <option>Titbit</option>
+              <option>Beverage</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="ingr-like">Ingredients Liked:</label>
+          <div class="col-sm-10">
+            <select multiple class="form-control" id="ingr-like">
+              <option>Chocolate</option>
+              <option>Bread</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" value="Submit" class="btn btn-success">Submit</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- javascript scripts -->
+<script src="../www/js/jquery-1.11.3.min.js"></script>
+<script src="../www/js/bootstrap.min.js"></script>
+<script src="../www/js/recipe-finder.js"></script>
+</body>
+</html>

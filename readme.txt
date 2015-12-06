@@ -15,11 +15,5 @@ Description :
 
 Dev :
 	To run the project :
-	1 - Download and install a version of the mysql database. create a database
-	called recipe_finder_db and a user called recipe_finder_manager whom you
-	grant all rights on the database created.
-	2 - Download the httpd apache server and replace in the Makefile the paths
-	with your own.
-	3 - Run the http server on your machine
-	4 - Execute "make sync" on the command line
-	5 - Access the program in a web browser on the address "localhost"
+	1 - Run start-server.sh script
+	2 - Access the program in a web browser on the address "localhost:port" with port being the port specified in the config file

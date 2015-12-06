@@ -1,10 +1,11 @@
 # This file describes how the application works
 
 Program parts and Technologies :
-	- Relational Database (Mysql)
-	- Persistent Server (Java) + Recommandation Engine (Python)
-	- Client (Java)
+	- Database (SQLite)
+	- HTTP Server (Python)
+	- Recommandation Engine (Python)
 	- Web Crawler (Python)
+	- Client (Browser)
 
 Data type :
 	How to identify a meal recipe on a web page :
@@ -28,5 +29,15 @@ Client side :
 	"user informations", ...
 
 Web Crawler script :
-	- Avoir une table de correspondance, d'ingredients pour pouvoir avoir un
-	minimum de doublons.
+	- A correspondance table of ingredients to minimize the number of duplications
+
+Structure of the project :
+	- doc the documentation on algorithms and methods used
+	- src the sources of the server
+		- cgi_bin/ : back-end scripts (+ recommandation engine, web crawler)
+		- db/ : database managment scripts
+		- wwww/ : the web pages
+		- server.py : the server main
+		- recipe_finder.db : the SQLite database
+		- index.html : the main web page
+	- tst the tests on the algorithms of the web crawler and recommandation engine.

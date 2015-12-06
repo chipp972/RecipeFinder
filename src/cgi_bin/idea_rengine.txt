@@ -1,4 +1,4 @@
-Idea :
+TODO Idea :
 DB :
 	- new relation : "Stats" that regroups
 	 -> its position (rank)
