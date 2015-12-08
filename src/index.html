@@ -36,9 +36,52 @@
 
     <!-- Middle part -->
     <div class="col-sm-8 text-left">
-      <h2>Welcome !!</h2>
+      <h2>Welcome in Recipe Finder !!!</h2>
       <hr>
-      Welcome to the Recipe Finder app !!!
+      <form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="email">Email:</label>
+    <div class="col-sm-10">
+    <input name="email" type="email" class="form-control" id="email" placeholder="Enter email">
+    </div>
+    <label class="control-label col-sm-2" for="password">Pass:</label>
+    <div class="col-sm-10">
+    <input name="password" type="password" class="form-control" id="password" placeholder="************************">
+    </div>
+  </div>
+</form>
+<!-- Search Form -->
+
+<form class="form-horizontal" role="form" action="../cgi_bin/rec_engine.py" method="POST">
+<div class="modal-body">
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="type">Type:</label>
+    <div class="col-sm-10">
+      <select class="form-control" id="type" name="type">
+        <option>Entree</option>
+        <option>Main dish</option>
+        <option>Dessert</option>
+        <option>Titbit</option>
+        <option>Beverage</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="ingr-like">Ingredients Liked:</label>
+    <div class="col-sm-10">
+      <select multiple class="form-control" name="ingr-like" id="ingr-like">
+        <option>Chocolate</option>
+        <option>Bread</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  <button type="submit" value="Submit" class="btn btn-success">Submit</button>
+</div>
+</form>
+
     </div>
 
     <!-- Right part -->
@@ -68,11 +111,11 @@
         <div class="form-group">
           <label class="control-label col-sm-2" for="email">Email:</label>
           <div class="col-sm-10">
-          <input type="email" class="form-control" id="email" placeholder="Enter email">
+          <input name="email" type="email" class="form-control" id="email" placeholder="Enter email">
           </div>
           <label class="control-label col-sm-2" for="password">Pass:</label>
           <div class="col-sm-10">
-          <input type="password" class="form-control" id="password" placeholder="************************">
+          <input name="password" type="password" class="form-control" id="password" placeholder="************************">
           </div>
         </div>
       </form>
@@ -98,7 +141,7 @@
         <div class="form-group">
           <label class="control-label col-sm-2" for="type">Type:</label>
           <div class="col-sm-10">
-            <select class="form-control" id="type">
+            <select name="type" class="form-control" id="type">
               <option>Entree</option>
               <option>Main dish</option>
               <option>Dessert</option>
@@ -110,7 +153,7 @@
         <div class="form-group">
           <label class="control-label col-sm-2" for="ingr-like">Ingredients Liked:</label>
           <div class="col-sm-10">
-            <select multiple class="form-control" id="ingr-like">
+            <select multiple name="ingr-like" class="form-control" id="ingr-like">
               <option>Chocolate</option>
               <option>Bread</option>
             </select>

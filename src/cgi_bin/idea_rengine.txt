@@ -27,3 +27,4 @@ Algo :
 
 	Return :
 		Dictionnary with the recipe ids and the result of the tfidf
+The goal is to get the full recipe list minus the ones that don't correspondthe search and try to determine a rank for each according to what the user liked before (1) and what other users with the same tastes (ingredient choices) liked (2)
