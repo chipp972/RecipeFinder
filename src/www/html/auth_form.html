@@ -1,12 +1,16 @@
-<form class="form-horizontal" role="form">
-  <div class="form-group">
-    <label class="control-label col-sm-2" for="email">Email:</label>
-    <div class="col-sm-10">
-    <input name="email" type="email" class="form-control" id="email" placeholder="Enter email">
-    </div>
-    <label class="control-label col-sm-2" for="password">Pass:</label>
-    <div class="col-sm-10">
-    <input name="password" type="password" class="form-control" id="password" placeholder="************************">
-    </div>
+<!-- Authentication Form -->
+<form class="form-horizontal" role="form" action="../cgi_bin/form.py" method="POST">
+
+<div class="form-group">
+  <label class="control-label col-sm-2" for="email">Email:</label>
+  <div class="col-sm-10">
+  <input name="email" type="email" class="form-control" id="email" placeholder="Enter email">
   </div>
-</form>
+</div>
+
+<div class="form-group">
+  <label class="control-label col-sm-2" for="password">Pass:</label>
+  <div class="col-sm-10">
+  <input name="password" type="password" class="form-control" id="password" placeholder="************************">
+  </div>
+</div>

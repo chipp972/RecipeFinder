@@ -31,3 +31,7 @@ def db_init():
         sql_requests = _fd.read().split('\n\n')
         _fd.close()
         db_execute(sql_requests)
+        db_execute(["INSERT INTO types VALUES (?, %s)" % 'entree'])
+        db_execute(["INSERT INTO types VALUES (?, %s)" % 'main_dish'])
+        db_execute(["INSERT INTO types VALUES (?, %s)" % 'dessert'])
+        db_execute(["INSERT INTO types VALUES (?, %s)" % 'other'])

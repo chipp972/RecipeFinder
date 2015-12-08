@@ -13,8 +13,4 @@ def create_user(info):
 
 def add_ingredient():
     """ add """
-
-
-def get_all_recipes(info):
-    """ get all recipes corresponding to some criterias """
-    db_execute(""" """ % info['test'])
+    # TODO modifier le search form

@@ -1,26 +1,28 @@
-""" Recommandation engine container """
+""" Script used to retrieve infos from the form and check identity """
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import cgi
-import cgitb; cgitb.enable()
+import cgitb
 from page_builder import display
+
+cgitb.enable()
 
 # FORM = cgi.FieldStorage()
 FORM = cgi.FormContentDict()
 
-_mid = FORM['type']
+MID = FORM['type']
 i = 0
 while i < len(FORM['ingr-like']):
-    _mid += ' '+FORM['ingr-like'][i]
+    MID += ' '+FORM['ingr-like'][i]
     i += 1
 
-# _mid = FORM['type'].value
+# MID = FORM['type'].value
 
 
 CONTENT = {
     'title': 'Test',
-    'middle': _mid,
+    'middle': MID,
     'left': "haha",
     'right': ''
 }

@@ -23,15 +23,16 @@ ADDR = CONFIG.get('server', 'address')
 PORT = CONFIG.getint('server', 'port')
 DB_PATH = CONFIG.get('database', 'path')
 
-SEARCH_FORM = open(CONFIG.get('html', 'search_form_path')).read()
+
 AUTH_FORM = open(CONFIG.get('html', 'auth_form_path')).read()
+SEARCH_FORM = open(CONFIG.get('html', 'search_form_path')).read()
 
 # Index Content and path
 CONTENT = AUTH_FORM + SEARCH_FORM
 
 INDEX_PATH = os.path.join(APP_DIR, 'index.html')
 INDEX_CONTENT = {
-    'title': 'Welcome in Recipe Finder !!!',
+    'title': 'Welcome in the Recipe Finder !!!',
     'middle': CONTENT,
     'left': '',
     'right': ''
