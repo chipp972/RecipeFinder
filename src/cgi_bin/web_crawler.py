@@ -8,6 +8,12 @@ import urllib2
 from bs4 import BeautifulSoup as parse
 import re
 from db.db_module import db_execute
+from db.db_output import get_all_recipes
+
+URL = 'http://www.marmiton.org/'
+URL = 'http://www.marmiton.org/recettes/recette_gateau-au-yaourt_12719.aspx'
+URL = 'http://www.marmiton.org/recettes/recette_tiramisu-aux-fraises_14039.aspx'
+# URL = 'http://www.foodnetwork.com/recipes/food-network-kitchens/classic-sugar-cookies.html'
 
 def clean_ingredients(_li):
     """ clean the ingredient list """
@@ -23,10 +29,14 @@ def determine_type(title):
     """ return the type of the recipe """
     std_title = title.lower()
 
-    entree_kw = ['salade']
-    main_dish_kw = []
+    entree_kw = [
+        'salade', 'soupe'
+    ]
+    main_dish_kw = [
+        'gratin', 'boeuf', 'poulet', 'filet', 'saumon', 'thon'
+    ]
     dessert_kw = [
-        'gateau', 'tiramisu'
+        'gateau', 'tiramisu', 'creme', 'caramel', 'sucre', 'chocolat', 'vanille', 'fraise'
     ]
     for i in entree_kw:
         if i in std_title:
@@ -38,11 +48,6 @@ def determine_type(title):
         if i in std_title:
             return 'dessert'
     return 'other'
-
-URL = 'http://www.marmiton.org/'
-URL = 'http://www.marmiton.org/recettes/recette_gateau-au-yaourt_12719.aspx'
-URL = 'http://www.marmiton.org/recettes/recette_tiramisu-aux-fraises_14039.aspx'
-# URL = 'http://www.foodnetwork.com/recipes/food-network-kitchens/classic-sugar-cookies.html'
 
 def get_recipe(url):
     """ take a url and return a dictionnary containing a recipe or None """
@@ -90,3 +95,4 @@ def get_recipe(url):
 
 
 get_recipe(URL)
+get_all_recipes('test')

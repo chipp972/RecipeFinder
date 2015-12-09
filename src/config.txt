@@ -14,4 +14,3 @@ template_path = %(app_dir)s/www/html/template.html
 search_form_path = %(app_dir)s/www/html/search_form.html
 auth_form_path = %(app_dir)s/www/html/auth_form.html
 opinion_form_path = %(app_dir)s/www/html/opinion_form.html
-

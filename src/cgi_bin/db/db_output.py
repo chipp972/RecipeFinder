@@ -5,8 +5,6 @@
 from base64 import b64encode
 from db_module import db_execute
 
-# TODO output database functions
-
 def check_user(info):
     """ Create a user with a dictionnary info : {email, password} """
     req = """INSERT INTO users(email, password)
@@ -16,4 +14,9 @@ def check_user(info):
 
 def get_all_recipes(info):
     """ get all recipes corresponding to some criterias """
-    db_execute(""" """ % info['test'])
+    r = db_execute(["""
+        SELECT *
+        FROM recipes
+    """])
+    print r
+    # db_execute("" % info['test'])

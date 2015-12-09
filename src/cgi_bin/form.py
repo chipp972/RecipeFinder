@@ -13,8 +13,8 @@ FORM = cgi.FormContentDict()
 
 MID = FORM['type']
 i = 0
-while i < len(FORM['ingr-like']):
-    MID += ' '+FORM['ingr-like'][i]
+for item in FORM['ingr-like']:
+    MID += ' '+FORM['ingr-like']
     i += 1
 
 # MID = FORM['type'].value
@@ -27,6 +27,7 @@ CONTENT = {
     'right': ''
 }
 
+# TODO en fonction du form : appel du bon script
 # calling the recommandation engine script with the list of arguments
 
 display(CONTENT)
