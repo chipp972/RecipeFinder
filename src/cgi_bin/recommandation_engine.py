@@ -56,5 +56,4 @@ Algo :
 
 	Return :
 		Dictionnary with the recipe ids and the result of the tfidf
-
 '''

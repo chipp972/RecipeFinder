@@ -1,0 +1,16 @@
+[DEFAULT]
+app_dir = C:\Users\pierr_000\Dropbox\Cours\M2\Data_Mining\Project\RecipeFinder\src
+
+[server]
+address = localhost
+port = 8080
+
+[database]
+path = %(app_dir)s/db/recipe_finder.db
+init_file_path = %(app_dir)s/db/init_db.sql
+
+[html]
+template_path = %(app_dir)s/www/html/template.html
+search_form_path = %(app_dir)s/www/html/search_form.html
+auth_form_path = %(app_dir)s/www/html/auth_form.html
+opinion_form_path = %(app_dir)s/www/html/opinion_form.html
