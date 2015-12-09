@@ -10,20 +10,17 @@ def db_execute(requests):
     """ Execute requests given in a list of string """
     config = SafeConfigParser()
     config.read('config.txt')
-    data = []
     try:
         _conn = sqlite3.connect(config.get('database', 'path'))
         _cursor = _conn.cursor()
         for req in requests:
             _cursor.execute(req)
-        data = _cursor.fetchall()
         _conn.commit()
     except sqlite3.OperationalError:
         print 'Error : Operation Error with request ', req
         _conn.rollback()
     finally:
         _conn.close()
-    return data
 
 def db_init():
     """ Create the tables of the database """
