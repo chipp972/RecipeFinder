@@ -1,18 +1,3 @@
-CREATE TABLE url_to_treat (
-    id INTEGER PRIMARY KEY,
-    url TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE no_recipe_url (
-    id INTEGER PRIMARY KEY,
-    url TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE recipe_url (
-    id INTEGER PRIMARY KEY,
-    url TEXT NOT NULL UNIQUE
-);
-
 CREATE TABLE types (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL UNIQUE
@@ -21,10 +6,9 @@ CREATE TABLE types (
 CREATE TABLE recipes (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
+    url TEXT NOT NULL,
     photo TEXT,
-    url_id INTEGER NOT NULL,
-    type_id INTEGER,
-    FOREIGN KEY (url_id) REFERENCES recipe_url(id),
+    type_id INTEGER NOT NULL,
     FOREIGN KEY (type_id) REFERENCES types(id)
 );
 
@@ -35,8 +19,16 @@ CREATE TABLE ingredients (
 
 CREATE TABLE users(
 	id INTEGER PRIMARY KEY,
-	email TEXT,
-	password TEXT
+	email TEXT NOT NULL,
+);
+
+CREATE TABLE search(
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    recipe_id INTEGER NOT NULL,
+    recipe_position INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id)
 );
 
 CREATE TABLE opinions(
@@ -57,26 +49,26 @@ CREATE TABLE recipe_has_ingredients(
 	FOREIGN KEY (idIngr) REFERENCES ingredients(id)
 );
 
-CREATE TABLE user_currently_has_ingredient(
+CREATE TABLE user_has_favorite_recipes(
 	idUser INTEGER,
-	idIngr INTEGER,
-	PRIMARY KEY (idUser, idIngr),
+	idRecipe INTEGER,
+	PRIMARY KEY (idUser, idRecipe),
 	FOREIGN KEY (idUser) REFERENCES users(id),
+	FOREIGN KEY (idRecipe) REFERENCES recipes(id)
+);
+
+CREATE TABLE search_has_ingredients(
+	idSearch INTEGER,
+	idIngr INTEGER,
+	PRIMARY KEY (idSearch, idIngr),
+	FOREIGN KEY (idSearch) REFERENCES search(id),
 	FOREIGN KEY (idIngr) REFERENCES ingredients(id)
 );
 
-CREATE TABLE user_has_favorite_ingredient(
-	idUser INTEGER,
+CREATE TABLE search_has_not_ingredients(
+	idSearch INTEGER,
 	idIngr INTEGER,
-	PRIMARY KEY (idUser, idIngr),
-	FOREIGN KEY (idUser) REFERENCES users(id),
-	FOREIGN KEY (idIngr) REFERENCES ingredients(id)
-);
-
-CREATE TABLE user_has_forbidden_ingredient(
-	idUser INTEGER,
-	idIngr INTEGER,
-	PRIMARY KEY (idUser, idIngr),
-	FOREIGN KEY (idUser) REFERENCES users(id),
+	PRIMARY KEY (idSearch, idIngr),
+	FOREIGN KEY (idSearch) REFERENCES search(id),
 	FOREIGN KEY (idIngr) REFERENCES ingredients(id)
 );
