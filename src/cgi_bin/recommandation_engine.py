@@ -1,15 +1,19 @@
-import sklearn.feature_extraction.text import TfidfTransformer
+import os
+from sklearn.feature_extraction.text import TfidfTransformer
+import sqlite3
 
 def correct_word(word):
 	return word
 
 '''
-	@var recipe_type string
-	@var ingredients string list
-	@return list
+@var recipe_type string
+@var ingredients string list
+@return list
 '''
-def get_recipes(recipe_type, ingredients, list):
+def get_recipes(recipe_type, ingredients):
 	# Get datas from database
+	conn = sqlite3.connect(os.path.dirname(__file__)+"../db/recipe_finder.db");
+	recipes = c.execute("SELECT * FROM ");
 	
 	##### get recipe
 	
@@ -25,7 +29,7 @@ def get_recipes(recipe_type, ingredients, list):
 	## Researched stats
 	
 	# Return the result
-
+	
 '''
 Idea :
 DB :
@@ -49,7 +53,7 @@ Algo :
 			in function of its tastes
 		-> his opinions
 		-> (his favorites)
-		-> recipes that were chosen before by eveybody except user in function of their tastes
+        -> recipes that were chosen before by eveybody except user in function of their tastes
 
 	Compute :
 		TFIDF
