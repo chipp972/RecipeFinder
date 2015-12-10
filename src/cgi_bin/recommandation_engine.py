@@ -6,21 +6,34 @@ import sqlite3
 def correct_word(word):
 	return word
 
+def get_select_recipes(recipe_types, ingredients):
+	request = 'SELECT r.id, r.name, r.url, r.photo, i.name '
+	request += 'FROM recipes r '
+	request += 'LEFT JOIN recipe_has_ingredients ri ON r.idRecipe = ri.idRecipe '
+	request += 'LEFT JOIN ingredients i ON ri.idIngr = i.idIngr '
+	request += 'LEFT JOIN types t ON r.type_id = t.id '
+	if recipe_types == [] and ingredients == []:
+		return request
+	request += 'WHERE '
+	if not recipe_types == []:
+		request += 't.name=\''+recipe_types[0]+'\' '
+		for recipe_type in recipe_types:
+			request += 't.name=\''+recipe_type+'\' '
+	if not ingredients == []:
+		request += 'i.name=\''+ingredients[0]+'\' '
+		for ingredient in ingredients:
+			request += 'i.name=\''+ingredient+'\' '
+	return request
 '''
-@var recipe_type string
+@var recipe_types string list
 @var ingredients string list
 @return list
 '''
-def get_recipes(recipe_type, ingredients):
+def get_recipes(recipe_types, ingredients):
 	# Get datas from database
 	conn = sqlite3.connect(os.path.dirname(__file__)+"../db/recipe_finder.db");
-	'''recipes = conn.execute(
-		"SELECT r.id, r.name, r.url, r.photo, i.name "
-		+"FROM recipes r "
-		+"LEFT JOIN recipe_has_ingredients ri ON r.idRecipe = ri.idRecipe "
-		+"LEFT JOIN ingredients i ON ri.idIngr = i.idIngr "
-	    +"WHERE ")
-	'''
+	#recipes = conn.execute(get_select_recipes(recipe_types, ingredients))
+	
 	# Data examples
 	selectRecipes = [
 		('1',"Recette chocolat","","","chocolat"),
@@ -44,7 +57,6 @@ def get_recipes(recipe_type, ingredients):
 			recipes[recipe[0]]['ingredients'] = []
 		recipes[recipe[0]]['ingredients'].append(recipe[4])
 	
-	print recipes
 	'''
 	# Compute the weight of ingredients
 	vectorizer = CountVectorizer(min_df=1)
@@ -93,4 +105,5 @@ Algo :
 		Dictionnary with the recipe ids and the result of the tfidf
 '''
 
-get_recipes("",[""])
+#get_recipes(['dessert'],['chocolat'])
+get_recipes([],[''])
