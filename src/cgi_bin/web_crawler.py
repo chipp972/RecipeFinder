@@ -8,15 +8,7 @@ import unicodedata
 import urllib2
 from bs4 import BeautifulSoup as parse
 import re
-from db.db_module import db_execute
-# from db.db_output import get_all_recipes
-
-BASE = 'http://www.marmiton.org/'
-URL = 'http://www.marmiton.org/recettes/recette_gateau-au-yaourt_12719.aspx'
-URL = 'http://www.marmiton.org/recettes/recette_tiramisu-aux-fraises_14039.aspx'
-# URL = 'http://www.foodnetwork.com/recipes/food-network-kitchens/classic-sugar-cookies.html'
-URL = 'http://www.marmiton.org/recettes/recettes-index.aspx'
-URL = 'http://www.marmiton.org/recettes/recette_joue-de-porc-a-la-biere_36896.aspx'
+from db.db_module import db_execute_in
 
 def clean_ingredients(_li):
     """ clean the ingredient list """
@@ -24,35 +16,36 @@ def clean_ingredients(_li):
     for i in _li:
         i = re.sub(r'  ', '', i)
         i = re.sub(r'<.*?>', '', i)
-        i = re.sub(r'\n', '',i)
+        i = re.sub(r'\n', '', i)
         i = unicode(i, 'utf-8')
-        i = unicodedata.normalize('NFD',i).encode('ascii','ignore')
-        i = re.sub(r'.*:\r', '',i)
+        i = unicodedata.normalize('NFD', i).encode('ascii', 'ignore')
+        i = re.sub(r'.*:\r', '', i)
         i = re.sub(r'[(].*[)]', '', i)
-        #i = re.sub(r'-', r'', i)
+        # i = re.sub(r'\"', '', i)
         i = re.sub(r'.*[0-9]+ ?k?g? ', '', i)
         i = re.sub(r'.*de ', '', i)
         i = re.sub(r'.*d\'', '', i)
-        i = re.sub(r' $','',i)
-        i = re.sub(r'^-? ','', i)
-        
-        #i = re.sub(r'.* (de)? ', r'', i)
-        if(i!=''):
+        i = re.sub(r' $', '', i)
+        i = re.sub(r'^-? ', '', i)
+        if i != '':
             new_list.append(i)
     return new_list
 
 def determine_type(title):
     """ return the type of the recipe """
+    # TODO import keywords from a file
     std_title = title.lower()
 
     entree_kw = [
         'salade', 'soupe'
     ]
     main_dish_kw = [
-        'gratin', 'boeuf', 'poulet', 'filet', 'saumon', 'thon', 'porc'
+        'gratin', 'boeuf', 'poulet', 'filet', 'saumon', 'thon', 'porc',
+        'fromage', 'foie', 'gras', 'canard', 'dinde', 'fondue'
     ]
     dessert_kw = [
-        'gateau', 'tiramisu', 'creme', 'caramel', 'sucre', 'chocolat', 'vanille', 'fraise'
+        'gateau', 'tiramisu', 'creme', 'caramel', 'sucre', 'chocolat',
+        'vanille', 'fraise', 'poire', 'banane'
     ]
     for i in entree_kw:
         if i in std_title:
@@ -66,19 +59,19 @@ def determine_type(title):
     return 'other'
 
 def get_recipe(url, base):
-    """ take a url and return a dictionnary containing a recipe or None """
+    """ takes a url and a base url and return a dictionnary """
     web_page = urllib2.urlopen(url)
     html = web_page.read()
 
     soup = parse(html, "lxml")
 
-    # urls
+    # urls on marmiton
     _urls = []
     for i in soup.find_all('a'):
-        _u = i.get('href')
-        if _u is not None:
-            if base+'recettes/' in _u:
-                _urls.append(_u)
+        curr_url = i.get('href')
+        if curr_url is not None:
+            if base+'recettes/' in curr_url:
+                _urls.append(curr_url)
 
     # ingredients on marmiton
     ingr_list = []
@@ -87,7 +80,6 @@ def get_recipe(url, base):
             if 'm_content_recette_ingredients' in i.get('class'):
                 ingr_list = str(i).split('<br/>')
                 ingr_list = clean_ingredients(ingr_list)
-                # print ingr_list
 
     if len(ingr_list) == 0:
         return {
@@ -98,11 +90,12 @@ def get_recipe(url, base):
     # title on marmiton
     title = soup.title.string
     title = re.sub(r'[\r|\n|\t]*', '', title)
-    # print title
+    title = re.sub(r'\"', '', title)
+    title = unicodedata.normalize('NFD', title).encode('ascii', 'ignore')
+
 
     # type
     _type = determine_type(title)
-    # print _type
 
     # image on marmiton
     _img = ''
@@ -112,33 +105,49 @@ def get_recipe(url, base):
 
     return {
         'url': url,
-        'title': title,
+        'name': title,
         'img': _img,
         'type': _type,
         'ingredients': ingr_list,
         'add_urls': _urls
     }
 
-def web_crawler(enter_url):
-    """ start the web crawling """
+def insert_recipe(recipe_info):
+    """ Insert a recipe into the database """
+    req = """INSERT INTO recipes(name, url, photo_url, type_id)
+    VALUES(\"{0}\", \"{1}\", \"{2}\", \"1\");
+    """.format(recipe_info['name'], recipe_info['url'], recipe_info['img'])
+    db_execute_in([str(req)])
+    # TODO add ingredients
+    # TODO modify the search form adding the ingredients
+
+def web_crawler(enter_url, limit=1000):
+    """ main function of the web crawler :
+    manage the inputs in the database and the stack of urls
+    limit is the number of recipe we get before we stop the search """
+    # TODO for the type_id resolve the id of each type first
+    # add ingredients
     _base = enter_url
     url_to_treat = [enter_url]
     url_treated = []
-    while len(url_to_treat) > 0 :
+    recipe_found = 0
+    while len(url_to_treat) > 0 and recipe_found < limit:
         try:
             res = get_recipe(url_to_treat.pop(), _base)
         except urllib2.HTTPError:
             pass
-        # enregistrement dans la bdd
-        print res['url']
+        except KeyboardInterrupt:
+            break
+
+        # print res['url']
+
+        # recording the recipe in the database
+        if 'name' in res.keys():
+            insert_recipe(res)
+            recipe_found += 1
+
+        # Adding urls to the stack of urls to treat
         url_treated.append(res['url'])
         for i in res['add_urls']:
             if i not in url_treated and i not in url_to_treat:
                 url_to_treat.append(i)
-
-
-
-web_crawler(BASE)
-# print get_recipe(URL, BASE)
-
-# affichage des tables de la base

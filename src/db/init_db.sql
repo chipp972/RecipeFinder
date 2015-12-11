@@ -7,7 +7,7 @@ CREATE TABLE recipes (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     url TEXT NOT NULL,
-    photo TEXT,
+    photo_url TEXT,
     type_id INTEGER NOT NULL,
     FOREIGN KEY (type_id) REFERENCES types(id)
 );
@@ -19,7 +19,7 @@ CREATE TABLE ingredients (
 
 CREATE TABLE users(
 	id INTEGER PRIMARY KEY,
-	email TEXT NOT NULL,
+	email TEXT NOT NULL
 );
 
 CREATE TABLE search(

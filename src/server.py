@@ -7,7 +7,8 @@ import CGIHTTPServer
 from ConfigParser import SafeConfigParser
 import time
 from cgi_bin.page_builder import save_page
-from cgi_bin.db.db_module import db_init
+from cgi_bin.db.db_module import db_init, db_execute_out
+from cgi_bin.web_crawler import web_crawler
 import os
 
 # Configurations
@@ -38,9 +39,21 @@ INDEX_CONTENT = {
     'right': ''
 }
 
+# url of the recipe site
+BASE_URL = 'http://www.marmiton.org/'
+
+
 if __name__ == '__main__':
     # Create the database if it doesn't exist
-    db_init()
+    if os.path.isfile(DB_PATH) is False:
+        db_init()
+        web_crawler(BASE_URL, 1500)
+
+    # tests
+    ROWS = db_execute_out("SELECT * FROM recipes")
+    print 'There are {} recipes in the database !'.format(len(ROWS))
+    for r in ROWS:
+        print '%s %s %s %s %s' % (r[0], r[1], r[2], r[3], r[4])
 
     # Generate the index with the template
     save_page(INDEX_CONTENT, INDEX_PATH)

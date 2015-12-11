@@ -13,13 +13,14 @@ def get_template():
     template_handle.close()
     return Template(template_input)
 
-def create_recipe_list(id_list):
-    """ create a recipe list and return a dictionnary containing
-     the content of the page {left, right, middle} """
+# TODO create recipe list
+# def create_recipe_list(id_list):
+#     """ create a recipe list and return a dictionnary containing
+#      the content of the page {left, right, middle} """
 
 def display(_content):
     """ function called to display the template with the modified
-    content """
+    content : takes a dictionnary {title, left, middle, right} """
     _template = get_template()
     _result = _template.safe_substitute(
         title=_content["title"],
