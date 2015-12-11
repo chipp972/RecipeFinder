@@ -45,3 +45,5 @@ Temporary Items
 # IDE specific files
 process-palette.json
 .remote-sync.json
+*.pyc
+*.db
