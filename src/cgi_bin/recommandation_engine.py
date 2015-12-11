@@ -6,7 +6,15 @@ import sqlite3
 def correct_word(word):
 	return word
 
-def get_select_recipes(id_recipe_types, id_ingredients):
+def get_select_last_preferred_ingredients(id_user, n_max):
+	request = 'SELECT i.idIngr '
+	request += 'FROM users u '
+	request += 'LEFT JOIN search s ON u.id = s.user_id '
+	request += 'LEFT JOIN search_has_ingredient si ON s.id = si.idSearch '
+	request += 'WHERE u.id = id_user '
+	if not n_max == 0:
+		request += 'LIMIT '+n_max
+def get_select_recipes(id_user, id_recipe_types, id_ingredients, n_max):
 	request = 'SELECT r.id, i.name '
 	request += 'FROM recipes r '
 	request += 'LEFT JOIN recipe_has_ingredients ri ON r.idRecipe = ri.idRecipe '
@@ -17,14 +25,16 @@ def get_select_recipes(id_recipe_types, id_ingredients):
 		request += '(r.type_id=\''+recipe_types[0]+'\' '
 		for recipe_type in recipe_types:
 			request += 'OR r.type_id=\''+recipe_type+'\' '
-		request += ')'
+		request += ') '
 	if not recipe_types == [] and not ingredients == []:
-		request += 'AND'
+		request += 'AND '
 	if not ingredients == []:
 		request += '(ri.idIngr=\''+ingredients[0]+'\' '
 		for ingredient in ingredients:
 			request += 'OR ri.idIngr=\''+ingredient+'\' '
-		request+= ')'
+		request += ') '
+	if not n_max == 0:
+		request += 'LIMIT '+n_max
 	return request
 '''
 @var id_recipe_types id list
