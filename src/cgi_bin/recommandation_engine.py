@@ -14,7 +14,7 @@ def get_select_last_preferred_ingredients(id_user, n_max):
 	request += 'WHERE u.id = id_user '
 	if not n_max == 0:
 		request += 'LIMIT '+n_max
-def get_select_recipes(id_user, id_recipe_types, id_ingredients, n_max):
+def get_select_recipes(id_recipe_types, id_ingredients, n_max):
 	request = 'SELECT r.id, i.name '
 	request += 'FROM recipes r '
 	request += 'LEFT JOIN recipe_has_ingredients ri ON r.idRecipe = ri.idRecipe '
@@ -42,10 +42,10 @@ def get_select_recipes(id_user, id_recipe_types, id_ingredients, n_max):
 @var id_refused_ingredients id list
 @return list
 '''
-def get_recipes(id_recipe_types, id_wanted_ingredients, id_refused_ingredients):
+def get_recipes(id_user, id_recipe_types, id_wanted_ingredients, id_refused_ingredients):
 	# Get datas from database
 	conn = sqlite3.connect(os.path.dirname(__file__)+"../db/recipe_finder.db");
-	#recipes = conn.execute(get_select_recipes(recipe_types, wanted_ingredients))
+	#recipes = conn.execute(get_select_recipes(recipe_types, wanted_ingredients, 0))
 	
 	# Data examples
 	selectRecipes = [
@@ -68,8 +68,10 @@ def get_recipes(id_recipe_types, id_wanted_ingredients, id_refused_ingredients):
 			recipes[recipe[0]]['id'] = recipe[0]
 			recipes[recipe[0]]['ingredients'] = []
 		recipes[recipe[0]]['ingredients'].append(recipe[1])
+
+	id_past_ingredients = []
+	#get_select_last_preferred_ingredients(id_user, 10)
 	
-	'''
 	# Compute the weight of ingredients
 	vectorizer = CountVectorizer(min_df=1)
 
@@ -84,7 +86,7 @@ def get_recipes(id_recipe_types, id_wanted_ingredients, id_refused_ingredients):
 	## Researched stats
 	
 	# Return the result
-	'''
+	
 '''
 Idea :
 DB :
@@ -117,4 +119,4 @@ Algo :
 		Dictionnary with the recipe ids and the result of the tfidf
 '''
 
-get_recipes(['dessert'],['chocolat'],['chocolat noir'])
+get_recipes(1,['dessert'],['chocolat'],['chocolat noir'])
