@@ -6,56 +6,58 @@ import sqlite3
 def correct_word(word):
 	return word
 
-def get_select_recipes(recipe_types, ingredients):
-	request = 'SELECT r.id, r.name, r.url, r.photo, i.name '
+def get_select_recipes(id_recipe_types, id_ingredients):
+	request = 'SELECT r.id, i.name '
 	request += 'FROM recipes r '
 	request += 'LEFT JOIN recipe_has_ingredients ri ON r.idRecipe = ri.idRecipe '
-	request += 'LEFT JOIN ingredients i ON ri.idIngr = i.idIngr '
-	request += 'LEFT JOIN types t ON r.type_id = t.id '
 	if recipe_types == [] and ingredients == []:
 		return request
 	request += 'WHERE '
 	if not recipe_types == []:
-		request += 't.name=\''+recipe_types[0]+'\' '
+		request += '(r.type_id=\''+recipe_types[0]+'\' '
 		for recipe_type in recipe_types:
-			request += 't.name=\''+recipe_type+'\' '
+			request += 'OR r.type_id=\''+recipe_type+'\' '
+		request += ')'
+	if not recipe_types == [] and not ingredients == []:
+		request += 'AND'
 	if not ingredients == []:
-		request += 'i.name=\''+ingredients[0]+'\' '
+		request += '(ri.idIngr=\''+ingredients[0]+'\' '
 		for ingredient in ingredients:
-			request += 'i.name=\''+ingredient+'\' '
+			request += 'OR ri.idIngr=\''+ingredient+'\' '
+		request+= ')'
 	return request
 '''
-@var recipe_types string list
-@var ingredients string list
+@var id_recipe_types id list
+@var id_wanted_ingredients id list
+@var id_refused_ingredients id list
 @return list
 '''
-def get_recipes(recipe_types, ingredients):
+def get_recipes(id_recipe_types, id_wanted_ingredients, id_refused_ingredients):
 	# Get datas from database
 	conn = sqlite3.connect(os.path.dirname(__file__)+"../db/recipe_finder.db");
-	#recipes = conn.execute(get_select_recipes(recipe_types, ingredients))
+	#recipes = conn.execute(get_select_recipes(recipe_types, wanted_ingredients))
 	
 	# Data examples
 	selectRecipes = [
-		('1',"Recette chocolat","","","chocolat"),
-		('2',"Recette moelleux chocolat","","","chocolat"),
-		('3',"Recette fondant chocolat","","","chocolat"),
-		('4',"Recette 3 chocolats","","","chocolat blanc"),
-		('4',"Recette 3 chocolats","","","chocolat noir"),
-		('4',"Recette 3 chocolats","","","chocolat au lait"),
-		('5',"Recette parfait au chocolat","","","chocolat"),
-		('6',"Poulet au curry","","","chocolat"),
-		('7',"Poulet au crabe","","","chocolat"),
-		('8',"Cuisses de poulets","","","chocolat")
+		('1',"chocolat"),
+		('2',"chocolat"),
+		('3',"chocolat"),
+		('4',"chocolat"),
+		('4',"chocolat blanc"),
+		('4',"chocolat noir"),
+		('4',"chocolat au lait"),
+		('5',"chocolat"),
+		('6',"poulet"),
+		('7',"poulet"),
+		('8',"poulet")
 	]
 	recipes = {}
 	for recipe in selectRecipes:
 		if(not recipes.has_key(recipe[0])):
 			recipes[recipe[0]] = {}
-			recipes[recipe[0]]['name'] = recipe[1]
-			recipes[recipe[0]]['url'] = recipe[2]
-			recipes[recipe[0]]['photo'] = recipe[3]
+			recipes[recipe[0]]['id'] = recipe[0]
 			recipes[recipe[0]]['ingredients'] = []
-		recipes[recipe[0]]['ingredients'].append(recipe[4])
+		recipes[recipe[0]]['ingredients'].append(recipe[1])
 	
 	'''
 	# Compute the weight of ingredients
@@ -105,5 +107,4 @@ Algo :
 		Dictionnary with the recipe ids and the result of the tfidf
 '''
 
-#get_recipes(['dessert'],['chocolat'])
-get_recipes([],[''])
+get_recipes(['dessert'],['chocolat'],['chocolat noir'])
