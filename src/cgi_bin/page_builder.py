@@ -3,6 +3,7 @@
 # -*- coding: utf-8 -*-
 
 from string import Template
+from bs4 import BeautifulSoup as parse
 
 TEMPLATE_FILE = 'www/html/template.html'
 

@@ -8,7 +8,8 @@ import unicodedata
 import urllib2
 from bs4 import BeautifulSoup as parse
 import re
-from db.db_module import db_execute_in
+from db.db_module import db_execute_in, db_execute_out
+
 
 def clean_ingredients(_li):
     """ clean the ingredient list """
@@ -33,7 +34,6 @@ def clean_ingredients(_li):
 
 def determine_type(title):
     """ return the type of the recipe """
-    # TODO import keywords from a file
     std_title = title.lower()
 
     entree_kw = [
@@ -112,38 +112,52 @@ def get_recipe(url, base):
         'add_urls': _urls
     }
 
-def insert_recipe(recipe_info):
-    """ Insert a recipe into the database """
+def get_recipe_request(recipe_info):
+    """ Return the sql request to insert a recipe into the database """
     req = """INSERT INTO recipes(name, url, photo_url, type_id)
-    VALUES(\"{0}\", \"{1}\", \"{2}\", \"1\");
-    """.format(recipe_info['name'], recipe_info['url'], recipe_info['img'])
-    db_execute_in([str(req)])
-    # TODO add ingredients
-    # TODO modify the search form adding the ingredients
+    VALUES(\"{0}\", \"{1}\", \"{2}\", \"{3}\");
+    """.format(recipe_info['name'], recipe_info['url'], recipe_info['img'], recipe_info['type'])
+    return str(req)
+
+def get_ingr_request(ingredient):
+    """ Return the sql request to insert an ingredient into the database """
+    req = """INSERT INTO ingredient(name)
+    VALUES(\"{0}\");""".format(ingredient['name'])
+    return str(req)
 
 def web_crawler(enter_url, limit=1000):
     """ main function of the web crawler :
     manage the inputs in the database and the stack of urls
     limit is the number of recipe we get before we stop the search """
-    # TODO for the type_id resolve the id of each type first
-    # add ingredients
     _base = enter_url
-    url_to_treat = [enter_url]
-    url_treated = []
+    url_to_treat = [enter_url] # the list of url to treat
+    url_treated = [] # th list of url treated
+    recipes_to_insert = [] # contains the requests to insert recipes
+    ingredients_to_insert = [] # contains the requests to insert ingredients
+    ingr_list = [] # contains the ingredient list
     recipe_found = 0
+
+    # Create a dictionnary with all the recipe types and their id
+    type_id = {}
+    for row in db_execute_out("SELECT * FROM types"):
+        type_id[row[1]] = row[0]
+
     while len(url_to_treat) > 0 and recipe_found < limit:
         try:
+            # get the recipe in a dictionnary
             res = get_recipe(url_to_treat.pop(), _base)
         except urllib2.HTTPError:
             pass
-        except KeyboardInterrupt:
-            break
 
-        # print res['url']
-
-        # recording the recipe in the database
+        # insert the sql request to add the recipe in the list
         if 'name' in res.keys():
-            insert_recipe(res)
+            res['type'] = type_id[res['type']] # on met l'id du type
+            recipes_to_insert.append(get_recipe_request(res))
+            for _ingr in res['ingredients']:
+                if _ingr not in ingr_list:
+                    # TODO arranger fonction get_ingr_request
+                    # ingredients_to_insert.append(get_ingr_request(_ingr))
+                    ingr_list.append(_ingr)
             recipe_found += 1
 
         # Adding urls to the stack of urls to treat
@@ -151,3 +165,11 @@ def web_crawler(enter_url, limit=1000):
         for i in res['add_urls']:
             if i not in url_treated and i not in url_to_treat:
                 url_to_treat.append(i)
+
+    # recording all the recipes and ingredients in the database
+    db_execute_in(recipes_to_insert)
+    db_execute_in(ingredients_to_insert)
+    # TODO modify the search form to add the ingredients
+    # TODO remplir la table recipe_has_ingredient pour chaque recette
+    # en trouvant les id des recettes dans la base et les id des ignredients
+    # # avec les select
