@@ -14,7 +14,7 @@ CREATE TABLE recipes (
 
 CREATE TABLE ingredients (
 	id INTEGER PRIMARY KEY,
-	name TEXT
+	name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE users(

@@ -47,7 +47,11 @@ if __name__ == '__main__':
     # Create the database if it doesn't exist
     if os.path.isfile(DB_PATH) is False:
         db_init()
+        TIME1 = time.asctime()
         web_crawler(BASE_URL, 1500)
+        TIME2 = time.asctime()
+        ROWS = db_execute_out("SELECT * FROM recipes")
+        print '{1} recipes added in {2}'.format(len(ROWS), (TIME2-TIME1))
 
     # tests
     ROWS = db_execute_out("SELECT * FROM recipes")
