@@ -33,7 +33,7 @@ if os.path.isfile(DB_PATH) is False:
     db_init()
     print 'Fetching recipes'
     TIME1 = time.clock()
-    web_crawler(BASE_URL, 1000)
+    web_crawler(BASE_URL, 50)
     TIME2 = time.clock()
     ROWS = db_execute_out("SELECT * FROM recipes")
     print '{} recipes added in {} seconds'.format(len(ROWS), str(TIME2 - TIME1))

@@ -88,9 +88,9 @@ def db_init():
     # inserting types in the database
     sql_insert_types = [
         "INSERT INTO types(name) VALUES ('entree')",
-        "INSERT INTO types(name) VALUES ('main_dish')",
+        "INSERT INTO types(name) VALUES ('plat principal')",
         "INSERT INTO types(name) VALUES ('dessert')",
-        "INSERT INTO types(name) VALUES ('other')"
+        "INSERT INTO types(name) VALUES ('autre')"
     ]
     db_execute_in(sql_insert_types)
 
