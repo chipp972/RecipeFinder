@@ -1,6 +1,14 @@
+import operator
 import os
 import sqlite3
 
+'''
+Create the statement to get last preferred ingredients
+serched by the current user
+@var id_user int
+@var n_max int
+@return string
+'''
 def get_select_last_preferred_ingredients(id_user, n_max):
 	request = 'SELECT i.idIngr '
 	request += 'FROM users u '
@@ -10,6 +18,14 @@ def get_select_last_preferred_ingredients(id_user, n_max):
 	if not n_max == 0:
 		request += 'LIMIT '+n_max
 
+'''
+Create the statement to searched recipes who contains
+at least one ingredients researched by the current user
+@var id_recipe_types int list
+@var id_ingredients int list
+@var n_max int
+@return string
+'''
 def get_select_recipes(id_recipe_types, id_ingredients, n_max):
 	request = 'SELECT r.id, i.name '
 	request += 'FROM recipes r '
@@ -32,7 +48,10 @@ def get_select_recipes(id_recipe_types, id_ingredients, n_max):
 	if not n_max == 0:
 		request += 'LIMIT '+n_max
 	return request
+
 '''
+Get recommander recipes to an user
+@var id_user int
 @var id_recipe_types id list
 @var id_wanted_ingredients id list
 @var id_refused_ingredients id list
@@ -45,24 +64,11 @@ def get_recipes(id_user, id_recipe_types, id_wanted_ingredients, id_refused_ingr
 	weights['past_wanted_ingredients'] = 5
 	weights['refused_ingredients'] = -10
 	
-	# Get datas from database
+	# Get recipes from database
 	conn = sqlite3.connect(os.path.dirname(__file__)+"../db/recipe_finder.db");
-	#recipes = conn.execute(get_select_recipes(recipe_types, wanted_ingredients, 0))
-	
-	# Data examples
-	selectRecipes = [
-		('1',"chocolat"),
-		('2',"chocolat"),
-		('3',"chocolat"),
-		('4',"chocolat"),
-		('4',"chocolat blanc"),
-		('4',"chocolat noir"),
-		('4',"chocolat au lait"),
-		('5',"chocolat"),
-		('6',"poulet"),
-		('7',"poulet"),
-		('8',"poulet")
-	]
+	selectRecipes = conn.execute(get_select_recipes(recipe_types, wanted_ingredients, 0))
+
+	# Create a dict to put together ingredients to the same recipe
 	recipes = {}
 	for recipe in selectRecipes:
 		if(not recipes.has_key(recipe[0])):
@@ -70,10 +76,13 @@ def get_recipes(id_user, id_recipe_types, id_wanted_ingredients, id_refused_ingr
 			recipes[recipe[0]]['id'] = recipe[0]
 			recipes[recipe[0]]['ingredients'] = []
 		recipes[recipe[0]]['ingredients'].append(recipe[1])
-	
-	id_past_ingredients = []
-	#get_select_last_preferred_ingredients(id_user, 10)
 
+	# Find the past ingredients preferred already searched in the past
+	id_past_ingredients = []
+	id_past_ingredients = get_select_last_preferred_ingredients(id_user, 10)
+
+	# Compute the weight of each recipe
+	listRecipeWeight = []
 	for key in recipes:
 		recipe = recipes[key]
 		recipe['weights'] = [weights['default']] * len(recipe['ingredients'])
@@ -89,5 +98,13 @@ def get_recipes(id_user, id_recipe_types, id_wanted_ingredients, id_refused_ingr
 		recipe['weight'] = 0
 		for i in recipe['weights']:
 			recipe['weight'] += i
+		listRecipeWeight.append((recipe['id'],recipe['weight']))
 
-get_recipes(1,['dessert'],['chocolat'],['chocolat noir'])
+	# Sort recipes to get the must of recipes
+	listRecipeWeight.sort(key = operator.itemgetter(1), reverse = True)
+
+	# Get just id recipes to return
+	idRecipes, w = map(list, zip(*listRecipeWeight))
+
+	# Return recipes
+	return idRecipes
