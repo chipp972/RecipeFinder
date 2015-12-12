@@ -10,6 +10,7 @@ from cgi_bin.page_builder import save_page
 from cgi_bin.db.db_module import db_init, db_execute_out, get_content
 from cgi_bin.web_crawler import web_crawler
 import os
+import sys
 
 # Configurations
 # Add the app path to the config file
@@ -33,7 +34,10 @@ if os.path.isfile(DB_PATH) is False:
     db_init()
     print 'Fetching recipes'
     TIME1 = time.clock()
-    web_crawler(BASE_URL, 50)
+    if len(sys.argv) > 1:
+        web_crawler(BASE_URL, sys.argv[1])
+    else:
+        web_crawler(BASE_URL)
     TIME2 = time.clock()
     ROWS = db_execute_out("SELECT * FROM recipes")
     print '{} recipes added in {} seconds'.format(len(ROWS), str(TIME2 - TIME1))
