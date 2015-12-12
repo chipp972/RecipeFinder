@@ -1,10 +1,5 @@
 import os
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
 import sqlite3
-
-def correct_word(word):
-	return word
 
 def get_select_last_preferred_ingredients(id_user, n_max):
 	request = 'SELECT i.idIngr '
@@ -14,6 +9,7 @@ def get_select_last_preferred_ingredients(id_user, n_max):
 	request += 'WHERE u.id = id_user '
 	if not n_max == 0:
 		request += 'LIMIT '+n_max
+
 def get_select_recipes(id_recipe_types, id_ingredients, n_max):
 	request = 'SELECT r.id, i.name '
 	request += 'FROM recipes r '
@@ -43,6 +39,12 @@ def get_select_recipes(id_recipe_types, id_ingredients, n_max):
 @return list
 '''
 def get_recipes(id_user, id_recipe_types, id_wanted_ingredients, id_refused_ingredients):
+	weights = {}
+	weights['default'] = 0
+	weights['wanted_ingredients'] = 10
+	weights['past_wanted_ingredients'] = 5
+	weights['refused_ingredients'] = -10
+	
 	# Get datas from database
 	conn = sqlite3.connect(os.path.dirname(__file__)+"../db/recipe_finder.db");
 	#recipes = conn.execute(get_select_recipes(recipe_types, wanted_ingredients, 0))
@@ -68,55 +70,24 @@ def get_recipes(id_user, id_recipe_types, id_wanted_ingredients, id_refused_ingr
 			recipes[recipe[0]]['id'] = recipe[0]
 			recipes[recipe[0]]['ingredients'] = []
 		recipes[recipe[0]]['ingredients'].append(recipe[1])
-
+	
 	id_past_ingredients = []
 	#get_select_last_preferred_ingredients(id_user, 10)
-	
-	# Compute the weight of ingredients
-	vectorizer = CountVectorizer(min_df=1)
 
-	tfidfs = []
-	for recipe in recipes:
-		tfidfs.append(vectorizer.fit_transform(list(recipe)))
-		#analyse = vectorizer.build_analyser()
-	
-	transformer = TfidfTransformer()	
-	#-- TF-IDF
-	
-	## Researched stats
-	
-	# Return the result
-	
-'''
-Idea :
-DB :
-	- new relation : "Stats" that regroups
-	 -> its position (rank)
-	 -> if it was clicked
-	 -> id recipe
-	 -> id user
-
-	- add index on user id and recipe id
-
- R_engine :
-(dico) -> {"78%": "id_recipe1", "53%" : "id2"...}
-
-Algo :
-	Init :
-		Determine the weight of each :
-		-> disliked ingredients of the user
-		-> liked ingredients of the user
-		-> recipes that were chosen before by the user
-			in function of its tastes
-		-> his opinions
-		-> (his favorites)
-        -> recipes that were chosen before by eveybody except user in function of their tastes
-
-	Compute :
-		TFIDF
-
-	Return :
-		Dictionnary with the recipe ids and the result of the tfidf
-'''
+	for key in recipes:
+		recipe = recipes[key]
+		recipe['weights'] = [weights['default']] * len(recipe['ingredients'])
+		for ingredient in id_wanted_ingredients:
+			if ingredient in recipe['ingredients']:
+				recipe['weights'][recipe['ingredients'].index(ingredient)] = weights['wanted_ingredients']
+		for ingredient in id_past_ingredients:
+			if ingredient in recipe['ingredients']:
+				recipe['weights'][recipe['ingredients'].index(ingredient)] = weights['past_wanted_ingredients']
+		for ingredient in id_refused_ingredients:
+			if ingredient in recipe['ingredients']:
+				recipe['weights'][recipe['ingredients'].index(ingredient)] = weights['refused_ingredients']
+		recipe['weight'] = 0
+		for i in recipe['weights']:
+			recipe['weight'] += i
 
 get_recipes(1,['dessert'],['chocolat'],['chocolat noir'])
