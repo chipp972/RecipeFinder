@@ -35,7 +35,7 @@ if os.path.isfile(DB_PATH) is False:
     print 'Fetching recipes'
     TIME1 = time.clock()
     if len(sys.argv) > 1:
-        web_crawler(BASE_URL, sys.argv[1])
+        web_crawler(BASE_URL, int(sys.argv[1]))
     else:
         web_crawler(BASE_URL)
     TIME2 = time.clock()
