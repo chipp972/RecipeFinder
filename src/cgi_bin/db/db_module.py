@@ -46,6 +46,33 @@ def db_execute_out(request):
         print 'Error : connect error'
     return data
 
+def add_options_to_form(table_name, form, tag_id):
+    """ add in the form in the tag_id the content of the two first rows
+    of the table_name given
+    - table_name : the name of the table
+    - form       : must be a valid option in the config file
+    - tag_id     : the tag id in the form """
+    config = SafeConfigParser()
+    config.read('config.txt')
+    # adding types to the search form
+    types = db_execute_out("SELECT * FROM "+ table_name +" ORDER BY name;")
+    form_path = config.get('html', form)
+    _fd = open(form_path)
+    soup = parse(_fd.read(), "lxml")
+    _fd.close()
+
+    soup.select(tag_id)[0].string = ''
+    for row in types:
+        opt = soup.new_tag('option')
+        opt.string = row[1]
+        opt['name'] = row[0]
+        soup.select(tag_id)[0].append(opt)
+
+    # writing the html file
+    html = soup.prettify(formatter='html')
+    with open(form_path, "wb") as _fd:
+        _fd.write(html)
+
 
 def db_init():
     """ Create the tables of the database and add the types """
@@ -68,23 +95,7 @@ def db_init():
     db_execute_in(sql_insert_types)
 
     # adding types to the search form
-    types = db_execute_out("SELECT * FROM types")
-    search_form_path = config.get('html', 'search_form_path')
-    _fd = open(search_form_path)
-    soup = parse(_fd.read(), "lxml")
-    _fd.close()
-
-    soup.select('select#type_select')[0].string = ''
-    for row in types:
-        opt = soup.new_tag('option')
-        opt.string = row[1]
-        opt['name'] = row[0]
-        soup.select('select#type_select')[0].append(opt)
-
-    # writing the html file
-    html = soup.prettify(formatter='html')
-    with open(search_form_path, "wb") as _fd:
-        _fd.write(html)
+    add_options_to_form('types', 'search_form_path', 'select#type_select')
 
 def get_content(file_path):
     """ Return the content of the web page inside the body tags """

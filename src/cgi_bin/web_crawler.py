@@ -8,7 +8,7 @@ import unicodedata
 import urllib2
 from bs4 import BeautifulSoup as parse
 import re
-from db.db_module import db_execute_in, db_execute_out
+from db.db_module import db_execute_in, db_execute_out, add_options_to_form
 
 
 def clean_ingredients(_li):
@@ -22,12 +22,13 @@ def clean_ingredients(_li):
         i = unicodedata.normalize('NFD', i).encode('ascii', 'ignore')
         i = re.sub(r'.*:\r', '', i)
         i = re.sub(r'[(].*[)]', '', i)
-        # i = re.sub(r'\"', '', i)
+        i = re.sub(r'\"', '', i)
         i = re.sub(r'.*[0-9]+ ?k?g? ', '', i)
         i = re.sub(r'.*de ', '', i)
         i = re.sub(r'.*d\'', '', i)
         i = re.sub(r' $', '', i)
         i = re.sub(r'^-? ', '', i)
+        i = i.lower()
         if i != '':
             new_list.append(i)
     return new_list
@@ -121,11 +122,11 @@ def get_recipe_request(recipe_info):
 
 def get_ingr_request(ingredient):
     """ Return the sql request to insert an ingredient into the database """
-    req = """INSERT INTO ingredient(name)
-    VALUES(\"{0}\");""".format(ingredient['name'])
+    req = """INSERT INTO ingredients(name)
+    VALUES(\"{0}\");""".format(ingredient)
     return str(req)
 
-def web_crawler(enter_url, limit=1000):
+def web_crawler(enter_url, limit=2000):
     """ main function of the web crawler :
     manage the inputs in the database and the stack of urls
     limit is the number of recipe we get before we stop the search """
@@ -155,8 +156,7 @@ def web_crawler(enter_url, limit=1000):
             recipes_to_insert.append(get_recipe_request(res))
             for _ingr in res['ingredients']:
                 if _ingr not in ingr_list:
-                    # TODO arranger fonction get_ingr_request
-                    # ingredients_to_insert.append(get_ingr_request(_ingr))
+                    ingredients_to_insert.append(get_ingr_request(_ingr))
                     ingr_list.append(_ingr)
             recipe_found += 1
 
@@ -169,7 +169,8 @@ def web_crawler(enter_url, limit=1000):
     # recording all the recipes and ingredients in the database
     db_execute_in(recipes_to_insert)
     db_execute_in(ingredients_to_insert)
-    # TODO modify the search form to add the ingredients
+    add_options_to_form('ingredients', 'search_form_path', 'select#ingr-like')
+    add_options_to_form('ingredients', 'search_form_path', 'select#ingr-dislike')
     # TODO remplir la table recipe_has_ingredient pour chaque recette
     # en trouvant les id des recettes dans la base et les id des ignredients
     # # avec les select
