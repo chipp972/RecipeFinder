@@ -7,7 +7,10 @@ from ConfigParser import SafeConfigParser
 from bs4 import BeautifulSoup as parse
 
 def db_execute_in(requests):
-    """ Execute requests given in a list of string """
+    """
+    Execute requests given in a list of string
+    @param requests LIST of strings containing a sql request each
+    """
     config = SafeConfigParser()
     config.read('config.txt')
     try:
@@ -26,7 +29,11 @@ def db_execute_in(requests):
         print 'Error : connect error'
 
 def db_execute_out(request):
-    """ Execute a select request and send back the result """
+    """
+    Execute a sql request that send back results (select)
+    @param request a string containing ONE request
+    @return the result of the request
+    """
     config = SafeConfigParser()
     config.read('config.txt')
     data = None
@@ -47,11 +54,13 @@ def db_execute_out(request):
     return data
 
 def add_options_to_form(table_name, form, tag_id):
-    """ add in the form in the tag_id the content of the two first rows
-    of the table_name given
-    - table_name : the name of the table
-    - form       : must be a valid option in the config file
-    - tag_id     : the tag id in the form """
+    """
+    Add in the form having the id tag_id the content of the two first rows
+    of the table_name given (id and name typically)
+    @param table_name the name of the table
+    @param form       an option in the config file containing the path to an html file
+    @param tag_id     the tag id in the form (exemple : select#type)
+    """
     config = SafeConfigParser()
     config.read('config.txt')
     # adding types to the search form
@@ -75,16 +84,16 @@ def add_options_to_form(table_name, form, tag_id):
 
 
 def db_init():
-    """ Create the tables of the database and add the types """
+    """
+    Create the tables of the database and add the types
+    """
     config = SafeConfigParser()
     config.read('config.txt')
-
     # create tables
     _fd = open(config.get('database', 'init_file_path'), 'r')
     sql_requests = _fd.read().split('\n\n')
     _fd.close()
     db_execute_in(sql_requests)
-
     # inserting types in the database
     sql_insert_types = [
         "INSERT INTO types(name) VALUES ('entree')",
@@ -93,12 +102,17 @@ def db_init():
         "INSERT INTO types(name) VALUES ('other')"
     ]
     db_execute_in(sql_insert_types)
-
     # adding types to the search form
     add_options_to_form('types', 'search_form_path', 'select#type_select')
 
-def get_content(file_path):
-    """ Return the content of the web page inside the body tags """
-    _fd = open(file_path, 'r')
+def get_content(_file):
+    """
+    Return the content of the web page inside the body tags
+    @param _file an option in the config file containing the path to an html file
+    @return the content of the body tags in the html file
+    """
+    config = SafeConfigParser()
+    config.read('config.txt')
+    _fd = open(config.get('html', _file), 'r')
     soup = parse(_fd.read(), "lxml")
     return soup.find('body').prettify(formatter='html')
