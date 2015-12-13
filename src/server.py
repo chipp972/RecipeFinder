@@ -1,24 +1,25 @@
-""" The http server that will serve the recipe finder application """
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+""" The http server that will serve the recipe finder application """
 
 import BaseHTTPServer
 import CGIHTTPServer
 from ConfigParser import SafeConfigParser
 import time
-from cgi_bin.page_builder import save_page
-from cgi_bin.db.db_module import db_init, db_execute_out, get_content
+from cgi_bin.page_builder import save_page, get_content, add_options_to_form
+from cgi_bin.db.db_module import db_init, db_execute_out
 from cgi_bin.web_crawler import web_crawler
 import os
 import sys
 
 # Configurations
 # Add the app path to the config file
+CONFIG_FILE = 'config.txt'
 APP_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)))
-FP = 'config.txt'
 CONFIG = SafeConfigParser({'app_dir': APP_DIR})
-CONFIG.read(FP)
-CONFIG.write(open(FP, 'wb'))
+CONFIG.read(CONFIG_FILE)
+CONFIG.write(open(CONFIG_FILE, 'wb'))
 
 # Retrieves configs
 ADDR = CONFIG.get('server', 'address')
@@ -32,6 +33,8 @@ BASE_URL = 'http://www.marmiton.org/'
 if os.path.isfile(DB_PATH) is False:
     print 'Initializing database'
     db_init()
+    # adding types to the search form
+    add_options_to_form('types', 'search_form_path', 'select#type_select')
     print 'Fetching recipes'
     TIME1 = time.clock()
     if len(sys.argv) > 1:

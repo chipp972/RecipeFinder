@@ -1,16 +1,3 @@
-TODO Idea :
-DB :
-	- new relation : "Stats" that regroups
-	 -> its position (rank)
-	 -> if it was clicked
-	 -> id recipe
-	 -> id user
-
-	- add index on user id and recipe id
-
- R_engine :
-(dico) -> {"78%": "id_recipe1", "53%" : "id2"...}
-
 Algo :
 	Init :
 		Determine the weight of each :
@@ -34,3 +21,21 @@ SELECT *
 FROM recipes NATURAL JOIN recipe_has_ingredients NATURAL JOIN ingredients
 WHERE ingredients.id = ingr1.id
 AND ingredients.id != ingr_not_like1.id
+
+SELECT *
+FROM recipes
+INNER JOIN recipe_has_ingredients ON recipes.id LIKE recipe_has_ingredients.idRecipe
+INNER JOIN ingredients ON ingredients.id LIKE recipe_has_ingredients.idIngr
+WHERE ingredients.id IS NOT \"{}\"
+AND ingredients.id IS NOT \"{}\"
+AND ...
+AND (
+ingredients.id LIKE \"{}\"
+OR ingredients.id LIKE \"{}\"
+OR ...
+);
+
+
+# mettre sur le coté gauche les recettes que l'user a visité et n'a pas encore
+# commenté pour le faire commenter et noter
+#  sur le coté droite mettre ses recettes favorites

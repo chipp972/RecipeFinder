@@ -14,6 +14,4 @@ template_path = %(app_dir)s/www/html/template.html
 search_form_path = %(app_dir)s/www/html/search_form.html
 opinion_form_path = %(app_dir)s/www/html/opinion_form.html
 fav_form_path = %(app_dir)s/www/html/fav_form.html
-recipe_list_path = %(app_dir)s/www/html/recipe_list.html
-recipe_path = %(app_dir)s/www/html/recipe.html
-
+recipe_panel = %(app_dir)s/www/html/recipe_panel.html

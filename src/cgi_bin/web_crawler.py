@@ -8,8 +8,8 @@ import unicodedata
 import urllib2
 from bs4 import BeautifulSoup as parse
 import re
-from db.db_module import db_execute_in, db_execute_out, add_options_to_form
-
+from db.db_module import db_execute_in, db_execute_out
+from page_builder import add_options_to_form
 
 def clean_ingredients(_li):
     """
