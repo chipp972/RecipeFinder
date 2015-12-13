@@ -1,4 +1,5 @@
-""" Script used to retrieve infos from the form and check identity """
+""" Script used to retrieve infos from the form and use the functions
+to display the right result """
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
@@ -11,18 +12,17 @@ cgitb.enable()
 # FORM = cgi.FieldStorage()
 FORM = cgi.FormContentDict()
 
-MID = FORM['type']
-i = 0
-for item in FORM['ingr-like']:
-    MID += ' '+FORM['ingr-like']
-    i += 1
+# MID = FORM['type']
+# i = 0
+# for item in FORM['ingr-like']:
+#     MID += ' '+FORM['ingr-like']
+#     i += 1
 
 # MID = FORM['type'].value
 
-
 CONTENT = {
     'title': 'Test',
-    'middle': MID,
+    'middle': FORM,
     'left': "haha",
     'right': ''
 }
