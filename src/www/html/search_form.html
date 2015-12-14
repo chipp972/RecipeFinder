@@ -1,48 +1,606 @@
 <!-- Search Form -->
-
 <!-- Recipe type -->
-<div class="form-group">
-  <label class="control-label col-sm-2" for="type">Type:</label>
-  <div class="col-sm-10">
-    <select class="form-control" id="type" name="type">
-      <option>Entree</option>
-      <option>Main dish</option>
-      <option>Dessert</option>
-      <option>Other</option>
-    </select>
-  </div>
-</div>
-
-<!-- Ingredients liked -->
-<div class="form-group">
-  <label class="control-label col-sm-2" for="ingr-like">Ingredients Liked:</label>
-  <div class="col-sm-10">
-    <select multiple class="form-control" name="ingr-like" id="ingr-like">
-      <option>chocolat</option>
-      <option>pain</option>
-    </select>
-  </div>
-</div>
-
-<!-- Ingredients disliked -->
-<div class="form-group">
-  <label class="control-label col-sm-2" for="ingr-like">Ingredients Disliked:</label>
-  <div class="col-sm-10">
-    <select multiple class="form-control" name="ingr-dislike" id="ingr-dislike">
-      <option>chocolat</option>
-      <option>pain</option>
-    </select>
-  </div>
-</div>
-
-<!-- Weighting choice -->
-<div class="form-group">
-  <label class="radio-inline"><input type="radio" name="optFav">Les plus favorites</label>
-  <label class="radio-inline"><input type="radio" name="optOpinion">Les mieux notées</label>
-  <label class="radio-inline"><input type="radio" name="optClick">Les plus vues</label>
-</div>
-
-<!-- End of Form -->
-<hr>
-<button type="submit" value="Submit" class="btn btn-success btn-block">Submit</button>
-</form>
+<html>
+ <body>
+  <form action="../cgi_bin/form.py" class="form-horizontal" method="POST" role="form">
+   <!-- User mail -->
+   <div class="form-group">
+    <label class="control-label col-sm-2" for="email">
+     Email:
+    </label>
+    <div class="col-sm-10">
+     <input class="form-control" id="email" name="email" placeholder="Enter email" required="" type="email"/>
+    </div>
+   </div>
+   <div class="form-group">
+    <label class="control-label col-sm-2" for="type">
+     Type:
+    </label>
+    <div class="col-sm-10">
+     <select class="form-control" id="type_select" name="type">
+      <option value="3">
+       dessert
+      </option>
+      <option value="1">
+       entree
+      </option>
+      <option value="2">
+       main_dish
+      </option>
+      <option value="4">
+       other
+      </option>
+     </select>
+    </div>
+   </div>
+   <!-- Ingredients liked -->
+   <div class="form-group">
+    <label class="control-label col-sm-2" for="ingr-like">
+     Ingredients Liked:
+    </label>
+    <div class="col-sm-10">
+     <select class="form-control" rows="10" id="ingr-like" multiple name="ingr-like" required="">
+      <option value="40">
+       'vache qui rit' ou equivalent
+      </option>
+      <option value="22">
+       ail
+      </option>
+      <option value="86">
+       amandes en poudre
+      </option>
+      <option value="20">
+       betteraves rouges
+      </option>
+      <option value="52">
+       beurre
+      </option>
+      <option value="31">
+       biscuits a la cuillere
+      </option>
+      <option value="41">
+       bouillon cube
+      </option>
+      <option value="14">
+       canne
+      </option>
+      <option value="23">
+       celeri
+      </option>
+      <option value="44">
+       chapelure
+      </option>
+      <option value="71">
+       chocolat a cuire
+      </option>
+      <option value="87">
+       chocolat a dessert
+      </option>
+      <option value="9">
+       chocolat au lait
+      </option>
+      <option value="10">
+       chocolat blanc
+      </option>
+      <option value="18">
+       chocolat en poudre
+      </option>
+      <option value="51">
+       chocolat noir corse
+      </option>
+      <option value="8">
+       chocolat noir dessert
+      </option>
+      <option value="35">
+       chocolat patissier
+      </option>
+      <option value="7">
+       citron
+      </option>
+      <option value="37">
+       citrons
+      </option>
+      <option value="11">
+       colorants
+      </option>
+      <option value="39">
+       courgettes
+      </option>
+      <option value="62">
+       creme
+      </option>
+      <option value="50">
+       creme fraiche
+      </option>
+      <option value="26">
+       creme fraiche allegee
+      </option>
+      <option value="30">
+       creme fraiche epaisse
+      </option>
+      <option value="70">
+       creme liquide
+      </option>
+      <option value="57">
+       cuilleres a soupe deau
+      </option>
+      <option value="75">
+       curry en poudre
+      </option>
+      <option value="77">
+       echalote
+      </option>
+      <option value="73">
+       endive par personne
+      </option>
+      <option value="59">
+       endives
+      </option>
+      <option value="58">
+       estragon
+      </option>
+      <option value="66">
+       estragon cisele
+      </option>
+      <option value="5">
+       farine
+      </option>
+      <option value="29">
+       fraises
+      </option>
+      <option value="55">
+       framboises
+      </option>
+      <option value="53">
+       gros oeuf
+      </option>
+      <option value="42">
+       grosses tomates
+      </option>
+      <option value="3">
+       huile
+      </option>
+      <option value="32">
+       kirsch
+      </option>
+      <option value="19">
+       lait
+      </option>
+      <option value="13">
+       lait entier
+      </option>
+      <option value="1">
+       levure
+      </option>
+      <option value="81">
+       maizena ou sauceline
+      </option>
+      <option value="16">
+       mascarpone
+      </option>
+      <option value="82">
+       matiere grasse
+      </option>
+      <option value="65">
+       mayonnaise faite maison
+      </option>
+      <option value="63">
+       mie complet
+      </option>
+      <option value="69">
+       noix
+      </option>
+      <option value="36">
+       oeuf
+      </option>
+      <option value="12">
+       oeufs
+      </option>
+      <option value="21">
+       oignon
+      </option>
+      <option value="79">
+       oignons
+      </option>
+      <option value="45">
+       olive
+      </option>
+      <option value="61">
+       pate brisee
+      </option>
+      <option value="33">
+       pate feuilletee
+      </option>
+      <option value="48">
+       pate sablee
+      </option>
+      <option value="83">
+       persil hache
+      </option>
+      <option value="67">
+       persil plat cisele
+      </option>
+      <option value="17">
+       petit beurre
+      </option>
+      <option value="54">
+       peu parfume
+      </option>
+      <option value="88">
+       poires au sirop
+      </option>
+      <option value="34">
+       poires bien mures
+      </option>
+      <option value="47">
+       poivre
+      </option>
+      <option value="74">
+       pommes
+      </option>
+      <option value="78">
+       porc
+      </option>
+      <option value="72">
+       poulet
+      </option>
+      <option value="49">
+       pralines concassees
+      </option>
+      <option value="28">
+       rhubarbe
+      </option>
+      <option value="38">
+       rhum
+      </option>
+      <option value="84">
+       rognons
+      </option>
+      <option value="60">
+       saumon frais
+      </option>
+      <option value="64">
+       saumon fumee
+      </option>
+      <option value="46">
+       sel
+      </option>
+      <option value="76">
+       sel poivre
+      </option>
+      <option value="25">
+       sel, poivre
+      </option>
+      <option value="4">
+       sucre
+      </option>
+      <option value="56">
+       sucre semoule
+      </option>
+      <option value="15">
+       sucre vanille
+      </option>
+      <option value="68">
+       tarte en pate brisee
+      </option>
+      <option value="6">
+       ufs
+      </option>
+      <option value="85">
+       un citron
+      </option>
+      <option value="43">
+       vache qui rit
+      </option>
+      <option value="80">
+       vin rouge
+      </option>
+      <option value="27">
+       vinaigre
+      </option>
+      <option value="24">
+       volaille
+      </option>
+      <option value="2">
+       yaourt
+      </option>
+     </select>
+    </div>
+   </div>
+   <!-- Ingredients disliked -->
+   <div class="form-group">
+    <label class="control-label col-sm-2" for="ingr-like">
+     Ingredients Disliked:
+    </label>
+    <div class="col-sm-10">
+     <select class="form-control" rows="10" id="ingr-dislike" multiple="" name="ingr-dislike">
+      <option value="40">
+       'vache qui rit' ou equivalent
+      </option>
+      <option value="22">
+       ail
+      </option>
+      <option value="86">
+       amandes en poudre
+      </option>
+      <option value="20">
+       betteraves rouges
+      </option>
+      <option value="52">
+       beurre
+      </option>
+      <option value="31">
+       biscuits a la cuillere
+      </option>
+      <option value="41">
+       bouillon cube
+      </option>
+      <option value="14">
+       canne
+      </option>
+      <option value="23">
+       celeri
+      </option>
+      <option value="44">
+       chapelure
+      </option>
+      <option value="71">
+       chocolat a cuire
+      </option>
+      <option value="87">
+       chocolat a dessert
+      </option>
+      <option value="9">
+       chocolat au lait
+      </option>
+      <option value="10">
+       chocolat blanc
+      </option>
+      <option value="18">
+       chocolat en poudre
+      </option>
+      <option value="51">
+       chocolat noir corse
+      </option>
+      <option value="8">
+       chocolat noir dessert
+      </option>
+      <option value="35">
+       chocolat patissier
+      </option>
+      <option value="7">
+       citron
+      </option>
+      <option value="37">
+       citrons
+      </option>
+      <option value="11">
+       colorants
+      </option>
+      <option value="39">
+       courgettes
+      </option>
+      <option value="62">
+       creme
+      </option>
+      <option value="50">
+       creme fraiche
+      </option>
+      <option value="26">
+       creme fraiche allegee
+      </option>
+      <option value="30">
+       creme fraiche epaisse
+      </option>
+      <option value="70">
+       creme liquide
+      </option>
+      <option value="57">
+       cuilleres a soupe deau
+      </option>
+      <option value="75">
+       curry en poudre
+      </option>
+      <option value="77">
+       echalote
+      </option>
+      <option value="73">
+       endive par personne
+      </option>
+      <option value="59">
+       endives
+      </option>
+      <option value="58">
+       estragon
+      </option>
+      <option value="66">
+       estragon cisele
+      </option>
+      <option value="5">
+       farine
+      </option>
+      <option value="29">
+       fraises
+      </option>
+      <option value="55">
+       framboises
+      </option>
+      <option value="53">
+       gros oeuf
+      </option>
+      <option value="42">
+       grosses tomates
+      </option>
+      <option value="3">
+       huile
+      </option>
+      <option value="32">
+       kirsch
+      </option>
+      <option value="19">
+       lait
+      </option>
+      <option value="13">
+       lait entier
+      </option>
+      <option value="1">
+       levure
+      </option>
+      <option value="81">
+       maizena ou sauceline
+      </option>
+      <option value="16">
+       mascarpone
+      </option>
+      <option value="82">
+       matiere grasse
+      </option>
+      <option value="65">
+       mayonnaise faite maison
+      </option>
+      <option value="63">
+       mie complet
+      </option>
+      <option value="69">
+       noix
+      </option>
+      <option value="36">
+       oeuf
+      </option>
+      <option value="12">
+       oeufs
+      </option>
+      <option value="21">
+       oignon
+      </option>
+      <option value="79">
+       oignons
+      </option>
+      <option value="45">
+       olive
+      </option>
+      <option value="61">
+       pate brisee
+      </option>
+      <option value="33">
+       pate feuilletee
+      </option>
+      <option value="48">
+       pate sablee
+      </option>
+      <option value="83">
+       persil hache
+      </option>
+      <option value="67">
+       persil plat cisele
+      </option>
+      <option value="17">
+       petit beurre
+      </option>
+      <option value="54">
+       peu parfume
+      </option>
+      <option value="88">
+       poires au sirop
+      </option>
+      <option value="34">
+       poires bien mures
+      </option>
+      <option value="47">
+       poivre
+      </option>
+      <option value="74">
+       pommes
+      </option>
+      <option value="78">
+       porc
+      </option>
+      <option value="72">
+       poulet
+      </option>
+      <option value="49">
+       pralines concassees
+      </option>
+      <option value="28">
+       rhubarbe
+      </option>
+      <option value="38">
+       rhum
+      </option>
+      <option value="84">
+       rognons
+      </option>
+      <option value="60">
+       saumon frais
+      </option>
+      <option value="64">
+       saumon fumee
+      </option>
+      <option value="46">
+       sel
+      </option>
+      <option value="76">
+       sel poivre
+      </option>
+      <option value="25">
+       sel, poivre
+      </option>
+      <option value="4">
+       sucre
+      </option>
+      <option value="56">
+       sucre semoule
+      </option>
+      <option value="15">
+       sucre vanille
+      </option>
+      <option value="68">
+       tarte en pate brisee
+      </option>
+      <option value="6">
+       ufs
+      </option>
+      <option value="85">
+       un citron
+      </option>
+      <option value="43">
+       vache qui rit
+      </option>
+      <option value="80">
+       vin rouge
+      </option>
+      <option value="27">
+       vinaigre
+      </option>
+      <option value="24">
+       volaille
+      </option>
+      <option value="2">
+       yaourt
+      </option>
+     </select>
+    </div>
+   </div>
+   <!-- Weighting choice -->
+   <div class="form-group">
+    <label class="radio-inline">
+     <input name="weighing" type="radio" value="weight-fav"/>
+     Recommandation by Favorites
+    </label>
+    <label class="radio-inline">
+     <input checked="" name="weighing" type="radio" value="weight-mark"/>
+     Recommandation by Mark
+    </label>
+    <label class="radio-inline disabled">
+     <input disabled="" name="weighing" type="radio" value="weight-click"/>
+     Recommandation by Click
+    </label>
+   </div>
+   <!-- End of Form -->
+   <hr/>
+   <button class="btn btn-success btn-block" type="submit" value="Submit">
+    Submit
+   </button>
+  </form>
+ </body>
+</html>

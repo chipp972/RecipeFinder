@@ -2,4 +2,4 @@
 #!/bin/sh
 #!/bin/bash
 
-cd src && python server.py
+cd src && python server.py $1

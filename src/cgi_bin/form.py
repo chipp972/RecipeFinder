@@ -1,33 +1,46 @@
-""" Script used to retrieve infos from the form and check identity """
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""
+Script used to retrieve infos from the form, format the informations,
+give them to the recommandation engine and display the result
+"""
+
 import cgi
 import cgitb
-from page_builder import display
-
+from page_builder import display, create_recipe_list, create_favs
+from db.db_module import add_user
+from formatter import format_recipes, format_form_result
+from r_engine import recommander
 cgitb.enable()
 
-# FORM = cgi.FieldStorage()
+# Retrieving informations from the form
 FORM = cgi.FormContentDict()
 
-MID = FORM['type']
-i = 0
-for item in FORM['ingr-like']:
-    MID += ' '+FORM['ingr-like']
-    i += 1
+# insert user into database and get user id
+MAIL = FORM['email'][0]
+USER_ID = str(add_user(MAIL)[0])
 
-# MID = FORM['type'].value
+# format the informations for the recommandation engine
+CLEAN_FORM = format_form_result(FORM, USER_ID)
 
+# getting the recommandation for the user
+RECOMMANDATION = recommander(CLEAN_FORM)
+
+# formatting the result to display it
+RESULT = format_recipes(RECOMMANDATION)
+
+# TODO getting the recipe list to comment
+# TODO formatting the form to display them on the left
+
+# create the favorite list
+FAVS = create_favs(USER_ID)
 
 CONTENT = {
-    'title': 'Test',
-    'middle': MID,
-    'left': "haha",
-    'right': ''
+    'title': '{} Recipes found !'.format(str(len(RESULT))),
+    'middle': create_recipe_list(RESULT),
+    'left': CLEAN_FORM,
+    'right':FAVS
 }
-
-# TODO en fonction du form : appel du bon script
-# calling the recommandation engine script with the list of arguments
 
 display(CONTENT)

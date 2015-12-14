@@ -1,0 +1,49 @@
+Algo :
+	Init :
+		Determine the weight of each :
+		-> disliked ingredients of the user
+		-> liked ingredients of the user
+		-> recipes that were chosen before by the user
+			in function of its tastes
+		-> his opinions
+		-> (his favorites)
+		-> recipes that were chosen before by eveybody except user in function of their tastes
+
+	Compute :
+		TFIDF
+
+	Return :
+		Dictionnary with the recipe ids and the result of the tfidf
+The goal is to get the full recipe list minus the ones that don't correspondthe search and try to determine a rank for each according to what the user liked before (1) and what other users with the same tastes (ingredient choices) liked (2)
+
+
+SELECT *
+FROM recipes NATURAL JOIN recipe_has_ingredients NATURAL JOIN ingredients
+WHERE ingredients.id = ingr1.id
+AND ingredients.id != ingr_not_like1.id
+
+SELECT *
+FROM recipes
+INNER JOIN recipe_has_ingredients ON recipes.id LIKE recipe_has_ingredients.idRecipe
+INNER JOIN ingredients ON ingredients.id LIKE recipe_has_ingredients.idIngr
+WHERE ingredients.id IS NOT \"{}\"
+AND ingredients.id IS NOT \"{}\"
+AND ...
+AND (
+ingredients.id LIKE \"{}\"
+OR ingredients.id LIKE \"{}\"
+OR ...
+);
+
+
+# test
+ROWS = db_execute_out("""
+    SELECT *
+    FROM recipes
+    INNER JOIN recipe_has_ingredients ON recipes.id LIKE recipe_has_ingredients.idRecipe
+    INNER JOIN ingredients ON ingredients.id LIKE recipe_has_ingredients.idIngr
+    WHERE ingredients.name LIKE \"citrons\";
+""")
+for r in ROWS:
+    print r
+# test
