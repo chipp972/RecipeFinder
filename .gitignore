@@ -46,5 +46,4 @@ Temporary Items
 process-palette.json
 .remote-sync.json
 *.pyc
-*.db
 index.html

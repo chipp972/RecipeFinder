@@ -80,6 +80,7 @@ def format_form_result(form, user_id):
     @param form the form from cgi.FormContentDict()
     @param user_id the user_id in a tuple retrieved from the database
     @return a clean dictionnary
+    {user_id, weighing, recipe_type, ingr_like, ingr_dislike}
     """
     formated_form = {
         'user_id': user_id,
