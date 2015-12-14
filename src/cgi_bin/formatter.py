@@ -16,7 +16,7 @@ def format_recipes(recipe_list):
     @return a lit of dictionnaries containing recipes :
     [{id, name, url, img, ingredients, opinions}, {...}, ...]
     """
-    if recipe_list is []:
+    if recipe_list == []:
         return []
     _req = """
         SELECT recipes.id, recipes.name, recipes.url, recipes.photo_url

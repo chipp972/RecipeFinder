@@ -18,7 +18,7 @@ def create_recipe_list(recipe_list):
     and ingredients
     @return a string containing the recipe list in a html format
     """
-    if recipe_list is []:
+    if recipe_list == []:
         return []
     config = SafeConfigParser()
     config.read(CONFIG_FILE)
@@ -162,6 +162,8 @@ def create_favs(user_id):
         WHERE idUser LIKE \"{}\"
     """.format(user_id))
     favorite_list = format_recipes([x[0] for x in fav_rows])
+    if favorite_list == []:
+        return parse('<p>No favorite</p>', 'lxml').prettify(formatter='html')
     # constructing the web page part
     config = SafeConfigParser()
     config.read(CONFIG_FILE)
@@ -177,6 +179,8 @@ def create_favs(user_id):
         # the well
         well = panel.select('div#$id_fav')[0]
         well['id'] = str(recipe['id'])+'_fav'
+        unfav = panel.select('button#$unfav_id')[0]
+        unfav['id'] = str(recipe['id'])+'_unfav'
         # the img
         img = panel.select('img#$fav_img')[0]
         img['id'] = str(recipe['id'])+'_favimg'
