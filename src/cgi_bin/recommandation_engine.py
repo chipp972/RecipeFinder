@@ -54,17 +54,17 @@ def get_select_recipes(id_recipe_types, id_ingredients, n_max):
 '''
 Get recommander recipes to an user
 @var id_user int
-@var id_recipe_types id list
-@var id_wanted_ingredients id list
-@var id_refused_ingredients id list
+@var id_recipe_types int list
+@var id_wanted_ingredients int list
+@var id_refused_ingredients int list
 @return list
 '''
 def get_recipes(id_user, id_recipe_types, id_wanted_ingredients, id_refused_ingredients):
     weights = {}
     weights['default'] = 0
-    weights['wanted_ingredients'] = 10
-    weights['past_wanted_ingredients'] = 5
-    weights['refused_ingredients'] = -10
+    weights['wanted_ingredients'] = 2
+    weights['past_wanted_ingredients'] = 1
+    weights['refused_ingredients'] = -2
 
     # Get recipes from database
     selectRecipes = db_execute_out(get_select_recipes(id_recipe_types, id_wanted_ingredients, 0))
