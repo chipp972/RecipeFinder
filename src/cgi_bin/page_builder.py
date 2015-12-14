@@ -41,6 +41,8 @@ def create_recipe_list(recipe_list):
             i['id'] = str(recipe['id'])
         for i in panel.select('div#id_head'):
             i['id'] = str(recipe['id'])+'_head'
+        for i in panel.select('button#$fav_id'):
+            i['id'] = str(recipe['id'])+'_addfav'
 
         img = panel.select('img#$id_img')[0]
         img['id'] = str(recipe['id'])+'_img'
@@ -149,6 +151,24 @@ def add_options_to_form(table_name, form, tag_id):
     with open(form_path, "wb") as _fd:
         _fd.write(html)
 
+def create_opinions(user_id):
+    """
+    retrieve the recipes the user visited and didn't comment,
+    format them then return them in a form intended to be in the left part
+    @param user_id the id of the user
+    @return string containing all the opinion forms
+    """
+    op_rows = db_execute_out("""
+        SELECT search.recipe_id
+        FROM search
+        CROSS JOIN opinions ON opinions.recipe LIKE search.recipe_id
+    """.format(user_id))
+    if op_rows is None:
+        return parse('<p>No recipe to comment</p>', 'lxml').prettify(formatter='html')
+    opinion_list = format_recipes([x[0] for x in op_rows])
+    # TODO transform recipes into forms
+    return opinion_list
+
 
 def create_favs(user_id):
     """
@@ -161,9 +181,9 @@ def create_favs(user_id):
         FROM user_has_favorite_recipes
         WHERE idUser LIKE \"{}\"
     """.format(user_id))
-    favorite_list = format_recipes([x[0] for x in fav_rows])
-    if favorite_list == []:
+    if fav_rows is None:
         return parse('<p>No favorite</p>', 'lxml').prettify(formatter='html')
+    favorite_list = format_recipes([x[0] for x in fav_rows])
     # constructing the web page part
     config = SafeConfigParser()
     config.read(CONFIG_FILE)
@@ -172,7 +192,6 @@ def create_favs(user_id):
     _fd.close()
     soup = parse('<div></div>', 'lxml')
     panel_group = soup.div
-    panel_group['class'] = 'container-fluid'
     # creating a panel for each recipe
     for recipe in favorite_list:
         panel = parse(fav_panel, 'lxml')
@@ -185,8 +204,8 @@ def create_favs(user_id):
         img = panel.select('img#$fav_img')[0]
         img['id'] = str(recipe['id'])+'_favimg'
         img['src'] = recipe['img']
-        img['width'] = '90%'
-        img['height'] = '90%'
+        img['width'] = '200px'
+        img['height'] = '200px'
         # the url
         url = panel.select('a#$fav_url')[0]
         url['id'] = str(recipe['id'])+'_favurl'

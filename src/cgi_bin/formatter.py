@@ -41,6 +41,9 @@ def format_recipes(recipe_list):
             'opinions': []
         }
 
+        if recipe['img'] == '':
+            recipe['img'] = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+
         # adding ingredients
         ingredient_rows = db_execute_out("""
             SELECT ingredients.name

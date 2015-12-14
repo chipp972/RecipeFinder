@@ -25,8 +25,7 @@ CREATE TABLE users(
 CREATE TABLE search(
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL,
-    recipe_id INTEGER NOT NULL,
-    recipe_position INTEGER NOT NULL,
+    recipe_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(id)
 );

@@ -8,7 +8,7 @@ give them to the recommandation engine and display the result
 
 import cgi
 import cgitb
-from page_builder import display, create_recipe_list, create_favs
+from page_builder import display, create_recipe_list, create_favs, create_opinions
 from db.db_module import add_user
 from formatter import format_recipes, format_form_result
 from r_engine import recommander
@@ -30,16 +30,16 @@ RECOMMANDATION = recommander(CLEAN_FORM)
 # formatting the result to display it
 RESULT = format_recipes(RECOMMANDATION)
 
-# TODO getting the recipe list to comment
-# TODO formatting the form to display them on the left
-
 # create the favorite list
 FAVS = create_favs(USER_ID)
+
+# create the list of opinions
+OPINIONS = create_opinions(USER_ID)
 
 CONTENT = {
     'title': '{} Recipes found !'.format(str(len(RESULT))),
     'middle': create_recipe_list(RESULT),
-    'left': CLEAN_FORM,
+    'left': OPINIONS,
     'right':FAVS
 }
 
