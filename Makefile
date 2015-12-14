@@ -16,4 +16,4 @@ test:
 	sh tst/test.sh
 
 clean:
-	rm -rf *~
+	rm -rf *~ src/db/recipe_finder.db

@@ -1,10 +1,14 @@
-"""  Functions to browse url to determine if there is a recipe
-on the web page and to retrieve the ingredients needed and
-various informations """
 #!/usr/bin/python
 # -*- coding: utf-8 -*
 
+"""
+Functions to browse url to determine if there is a recipe
+on the web page and to retrieve the ingredients needed and
+various informations
+"""
+
 import unicodedata
+
 import urllib2
 from bs4 import BeautifulSoup as parse
 import re

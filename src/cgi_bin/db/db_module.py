@@ -1,6 +1,7 @@
-""" General functions to access the database """
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+""" Functions to access the database """
 
 import sqlite3
 from ConfigParser import SafeConfigParser
@@ -29,6 +30,7 @@ def db_execute_in(requests):
     except sqlite3.Error:
         print 'Error : connect error'
 
+
 def db_execute_out(request):
     """
     Execute a sql request that send back results (select)
@@ -54,6 +56,7 @@ def db_execute_out(request):
         print 'Error : connect error'
     return data
 
+
 def db_init():
     """
     Create the tables of the database and add the types
@@ -73,6 +76,7 @@ def db_init():
         "INSERT INTO types(name) VALUES ('other')"
     ]
     db_execute_in(sql_insert_types)
+
 
 def add_user(mail):
     """

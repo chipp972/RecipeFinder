@@ -7,6 +7,7 @@ from ConfigParser import SafeConfigParser
 from string import Template
 from db.db_module import db_execute_out
 from bs4 import BeautifulSoup as parse
+from formatter import format_recipes
 
 CONFIG_FILE = 'config.txt'
 
@@ -17,6 +18,8 @@ def create_recipe_list(recipe_list):
     and ingredients
     @return a string containing the recipe list in a html format
     """
+    if recipe_list is []:
+        return []
     config = SafeConfigParser()
     config.read(CONFIG_FILE)
 
@@ -146,6 +149,46 @@ def add_options_to_form(table_name, form, tag_id):
     with open(form_path, "wb") as _fd:
         _fd.write(html)
 
+
+def create_favs(user_id):
+    """
+    retrieve the favorites recipes of the user and format them then return them
+    @param user_id the id of the user
+    @return favorites recipes formatted in html
+    """
+    fav_rows = db_execute_out("""
+        SELECT idRecipe
+        FROM user_has_favorite_recipes
+        WHERE idUser LIKE \"{}\"
+    """.format(user_id))
+    favorite_list = format_recipes([x[0] for x in fav_rows])
+    # constructing the web page part
+    config = SafeConfigParser()
+    config.read(CONFIG_FILE)
+    _fd = open(config.get('html', 'fav_panel'))
+    fav_panel = _fd.read()
+    _fd.close()
+    soup = parse('<div></div>', 'lxml')
+    panel_group = soup.div
+    panel_group['class'] = 'container-fluid'
+    # creating a panel for each recipe
+    for recipe in favorite_list:
+        panel = parse(fav_panel, 'lxml')
+        # the well
+        well = panel.select('div#$id_fav')[0]
+        well['id'] = str(recipe['id'])+'_fav'
+        # the img
+        img = panel.select('img#$fav_img')[0]
+        img['id'] = str(recipe['id'])+'_favimg'
+        img['src'] = recipe['img']
+        img['width'] = '90%'
+        img['height'] = '90%'
+        # the url
+        url = panel.select('a#$fav_url')[0]
+        url['id'] = str(recipe['id'])+'_favurl'
+        url['href'] = recipe['url']
+        panel_group.append(panel)
+    return soup.prettify(formatter='html')
 
 def get_content(_file):
     """

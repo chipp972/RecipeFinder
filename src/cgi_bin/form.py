@@ -8,9 +8,9 @@ give them to the recommandation engine and display the result
 
 import cgi
 import cgitb
-from page_builder import display, create_recipe_list
+from page_builder import display, create_recipe_list, create_favs
 from db.db_module import add_user
-from formatter import format_recipes
+from formatter import format_recipes, format_form_result
 from r_engine import recommander
 cgitb.enable()
 
@@ -19,27 +19,28 @@ FORM = cgi.FormContentDict()
 
 # insert user into database and get user id
 MAIL = FORM['email'][0]
-USER_ID = add_user(MAIL)
+USER_ID = str(add_user(MAIL)[0])
+
+# format the informations for the recommandation engine
+CLEAN_FORM = format_form_result(FORM, USER_ID)
 
 # getting the recommandation for the user
-RECOMMANDATION = recommander()
+RECOMMANDATION = recommander(CLEAN_FORM)
 
 # formatting the result to display it
 RESULT = format_recipes(RECOMMANDATION)
 
-# TODO getting the recipes to comment list
+# TODO getting the recipe list to comment
 # TODO formatting the form to display them on the left
 
-# TODO getting the favorite recipes of the user
-# TODO formatting them to display them on the right part
-
-FORMATTED_FORM = []
+# create the favorite list
+FAVS = create_favs(USER_ID)
 
 CONTENT = {
     'title': '{} Recipes found !'.format(str(len(RESULT))),
     'middle': create_recipe_list(RESULT),
-    'left': '',
-    'right': FORM
+    'left': CLEAN_FORM,
+    'right':FAVS
 }
 
 display(CONTENT)

@@ -45,19 +45,6 @@ if os.path.isfile(DB_PATH) is False:
     ROWS = db_execute_out("SELECT * FROM recipes")
     print '{} recipes added in {} seconds'.format(len(ROWS), str(TIME2 - TIME1))
 
-
-# test
-ROWS = db_execute_out("""
-    SELECT *
-    FROM recipes
-    INNER JOIN recipe_has_ingredients ON recipes.id LIKE recipe_has_ingredients.idRecipe
-    INNER JOIN ingredients ON ingredients.id LIKE recipe_has_ingredients.idIngr
-    WHERE ingredients.name LIKE \"citrons\";
-""")
-for r in ROWS:
-    print r
-# test
-
 # Generating the index.html file with the template
 SEARCH_FORM = get_content('search_form_path')
 

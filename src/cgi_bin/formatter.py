@@ -16,6 +16,8 @@ def format_recipes(recipe_list):
     @return a lit of dictionnaries containing recipes :
     [{id, name, url, img, ingredients, opinions}, {...}, ...]
     """
+    if recipe_list is []:
+        return []
     _req = """
         SELECT recipes.id, recipes.name, recipes.url, recipes.photo_url
         FROM recipes
@@ -68,6 +70,22 @@ def format_recipes(recipe_list):
         result.append(recipe)
     return result
 
-def format_form_result():
+
+def format_form_result(form, user_id):
     """
+    format the form result and return a clean dictionnary
+    @param form the form from cgi.FormContentDict()
+    @param user_id the user_id in a tuple retrieved from the database
+    @return a clean dictionnary
     """
+    formated_form = {
+        'user_id': user_id,
+        'weighing': form['weighing'][0],
+        'recipe_type': form['type'][0],
+        'ingr_like': form['ingr-like'],
+    }
+    if 'ingr-dislike' in form.keys():
+        formated_form['ingr_dislike'] = form['ingr-dislike']
+    else:
+        formated_form['ingr_dislike'] = []
+    return formated_form

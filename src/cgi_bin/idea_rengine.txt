@@ -36,6 +36,14 @@ OR ...
 );
 
 
-# mettre sur le coté gauche les recettes que l'user a visité et n'a pas encore
-# commenté pour le faire commenter et noter
-#  sur le coté droite mettre ses recettes favorites
+# test
+ROWS = db_execute_out("""
+    SELECT *
+    FROM recipes
+    INNER JOIN recipe_has_ingredients ON recipes.id LIKE recipe_has_ingredients.idRecipe
+    INNER JOIN ingredients ON ingredients.id LIKE recipe_has_ingredients.idIngr
+    WHERE ingredients.name LIKE \"citrons\";
+""")
+for r in ROWS:
+    print r
+# test
