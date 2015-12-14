@@ -46,7 +46,7 @@ FAVS = create_favs(USER_ID)
 CONTENT = {
     'title': '{} Recipes found !'.format(str(len(RESULT))),
     'middle': create_recipe_list(RESULT),
-    'left': CLEAN_FORM,
+    'left': '',
     'right':FAVS
 }
 

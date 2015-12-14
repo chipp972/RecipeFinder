@@ -17,7 +17,7 @@ def get_select_last_preferred_ingredients(id_user, n_max):
     request += 'LEFT JOIN search_has_ingredient si ON s.id = si.idSearch '
     request += 'WHERE u.id = id_user '
     if not n_max == 0:
-        request += 'LIMIT '+n_max
+        request += 'LIMIT '+str(n_max)
     return request
 
 '''
@@ -29,26 +29,26 @@ at least one ingredients researched by the current user
 @return string
 '''
 def get_select_recipes(id_recipe_types, id_ingredients, n_max):
-    request = 'SELECT r.id, i.name '
-    request += 'FROM recipes r '
-    request += 'LEFT JOIN recipe_has_ingredients ri ON r.id = ri.idRecipe '
+    request = 'SELECT r.id, ri.idIngr '
+    request += 'FROM recipes AS r '
+    request += 'LEFT JOIN recipe_has_ingredients AS ri ON r.id = ri.idRecipe '
     if id_recipe_types == [] and id_ingredients == []:
         return request
     request += 'WHERE '
     if not id_recipe_types == []:
-        request += '(r.type_id=\''+id_recipe_types[0]+'\' '
+        request += '(r.type_id='+id_recipe_types[0]+' '
         for recipe_type in id_recipe_types:
-            request += 'OR r.type_id=\''+recipe_type+'\' '
+            request += 'OR r.type_id='+recipe_type+' '
         request += ') '
     if not id_recipe_types == [] and not id_ingredients == []:
         request += 'AND '
     if not id_ingredients == []:
-        request += '(ri.idIngr=\''+id_ingredients[0]+'\' '
+        request += '(ri.idIngr='+id_ingredients[0]+' '
         for ingredient in id_ingredients:
-            request += 'OR ri.idIngr=\''+ingredient+'\' '
+            request += 'OR ri.idIngr='+ingredient+' '
         request += ') '
     if not n_max == 0:
-        request += 'LIMIT '+n_max
+        request += 'LIMIT '+str(n_max)
     return request
 
 '''
