@@ -69,6 +69,9 @@ def get_recipes(id_user, id_recipe_types, id_wanted_ingredients, id_refused_ingr
     # Get recipes from database
     selectRecipes = db_execute_out(get_select_recipes(id_recipe_types, id_wanted_ingredients, 0))
 
+    if selectRecipes is None:
+        return []
+
     # Create a dict to put together ingredients to the same recipe
     recipes = {}
     for recipe in selectRecipes:
@@ -105,6 +108,8 @@ def get_recipes(id_user, id_recipe_types, id_wanted_ingredients, id_refused_ingr
     listRecipeWeight.sort(key = operator.itemgetter(1), reverse = True)
 
     # Get just id recipes to return
+    if listRecipeWeight == []:
+        return []
     idRecipes, w = map(list, zip(*listRecipeWeight))
 
     # Return recipes
