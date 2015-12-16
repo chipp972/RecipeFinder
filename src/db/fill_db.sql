@@ -6,10 +6,6 @@ INSERT INTO users VALUES (2, 'user1@gmail.com');
 INSERT INTO users VALUES (3, 'user2@gmail.com');
 
 -- favorites
-INSERT INTO user_has_favorite_recipes VALUES (1, 1);
-
-INSERT INTO user_has_favorite_recipes VALUES (1, 2);
-
 INSERT INTO user_has_favorite_recipes VALUES (1, 3);
 
 INSERT INTO user_has_favorite_recipes VALUES (2, 4);
