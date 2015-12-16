@@ -8,7 +8,7 @@ import CGIHTTPServer
 from ConfigParser import SafeConfigParser
 import time
 from cgi_bin.page_builder import save_page, get_content, add_options_to_form
-from cgi_bin.db.db_module import db_init, db_execute_out
+from cgi_bin.db.db_module import db_execute_file, db_execute_out
 from cgi_bin.web_crawler import web_crawler
 import os
 import sys
@@ -32,7 +32,7 @@ BASE_URL = 'http://www.marmiton.org/'
 # Create the database if it doesn't exist and modify the search form
 if os.path.isfile(DB_PATH) is False:
     print 'Initializing database'
-    db_init()
+    db_execute_file('init_db_path')
     # adding types to the search form
     add_options_to_form('types', 'search_form_path', 'select#type_select')
     print 'Fetching recipes'
@@ -42,8 +42,13 @@ if os.path.isfile(DB_PATH) is False:
     else:
         web_crawler(BASE_URL)
     TIME2 = time.clock()
-    ROWS = db_execute_out("SELECT * FROM recipes")
-    print '{} recipes added in {} seconds'.format(len(ROWS), str(TIME2 - TIME1))
+    NB = db_execute_out("SELECT COUNT(id) FROM recipes")
+    print '{} recipes added in {} seconds'.format(str(NB[0][0]), str(TIME2 - TIME1))
+    print 'filling database with exemples'
+    db_execute_file('fill_db_path')
+else:
+    NB = db_execute_out("SELECT COUNT(id) FROM recipes")
+    print 'There are {} recipes in the database'.format(str(NB[0][0]))
 
 # Generating the index.html file with the template
 SEARCH_FORM = get_content('search_form_path')

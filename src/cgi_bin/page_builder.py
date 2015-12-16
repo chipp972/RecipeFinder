@@ -11,21 +11,20 @@ from formatter import format_recipes
 
 CONFIG_FILE = 'config.txt'
 
-def create_recipe_list(recipe_list):
+def create_recipe_list(recipe_list, user_id):
     """
     Create a web page content from the database rows of recipes
     @param recipe_list list of dictionnaries containing the recipes' informations
     and ingredients
     @return a string containing the recipe list in a html format
     """
-    if recipe_list is []:
+    if recipe_list == []:
         return []
     config = SafeConfigParser()
     config.read(CONFIG_FILE)
 
-    _fd = open(config.get('html', 'recipe_panel'))
-    recipe_panel = _fd.read()
-    _fd.close()
+    with open(config.get('html', 'recipe_panel')) as _fd:
+        recipe_panel = _fd.read()
 
     soup = parse('<div></div>', 'lxml')
     panel_group = soup.div
@@ -43,10 +42,8 @@ def create_recipe_list(recipe_list):
             i['id'] = str(recipe['id'])+'_head'
 
         img = panel.select('img#$id_img')[0]
-        img['id'] = str(recipe['id'])+'_img'
+        img['id'] = '{}_{}_img'.format(str(user_id), str(recipe['id']))
         img['src'] = recipe['img']
-        img['width'] = '90%'
-        img['height'] = '90%'
 
         title = panel.select('a#$id_title')[0]
         title['id'] = str(recipe['id'])+'_title'
@@ -63,7 +60,7 @@ def create_recipe_list(recipe_list):
             ingr_list.append(ingr_li)
 
         url = panel.select('a#$id_url')[0]
-        url['id'] = str(recipe['id'])+'_url'
+        url['id'] = '{}_{}_url'.format(str(user_id), str(recipe['id']))
         url['href'] = recipe['url']
 
         opinion_list = panel.select('ul#$id_opinions')[0]
@@ -71,12 +68,133 @@ def create_recipe_list(recipe_list):
         for _opinion in recipe['opinions']:
             opinion_li = soup.new_tag('li')
             opinion_li['class'] = 'list-group-item'
-            opinion_li.string = """{0} gives {1}/5 : \"{2}\"
+            opinion_li.string = """
+                {0} gives {1}/10 : \"{2}\"
             """.format(_opinion['author'], _opinion['mark'], _opinion['comment'])
             opinion_list.append(opinion_li)
 
         panel_group.append(panel)
 
+    return soup.prettify(formatter='html')
+
+
+def create_opinions(user_id):
+    """
+    retrieve the recipes the user visited and didn't comment,
+    format them then return them in a form intended to be in the left part
+    @param user_id the id of the user
+    @return string containing all the opinion forms
+    """
+    # TODO probleme : les opinions ne s'enleve pas lorsque rempli
+    op_rows = db_execute_out("""
+        SELECT recipe_id
+        FROM opinions
+        WHERE author LIKE {};
+    """.format(user_id))
+    if op_rows == []:
+        search_rows = db_execute_out("""
+            SELECT recipe_id
+            FROM search
+            WHERE user_id LIKE {}
+        """.format(user_id))
+    elif len(op_rows[0]) == 1:
+        search_rows = db_execute_out("""
+            SELECT recipe_id
+            FROM search
+            WHERE user_id LIKE {}
+            AND recipe_id NOT LIKE {};
+        """.format(user_id, op_rows[0][0]))
+    else:
+        search_rows = db_execute_out("""
+            SELECT recipe_id
+            FROM search
+            WHERE user_id LIKE {}
+            AND recipe_id NOT IN {};
+        """.format(user_id, (x[0] for x in op_rows[0])))
+
+    if search_rows == [] or search_rows is None:
+        return parse("""
+            <h4>How did you find theese recipes ?</h4><p>No recipe to comment</p>
+        """, 'lxml').prettify(formatter='html')
+    opinion_list = format_recipes([x[0] for x in search_rows])
+    # constructing the web page part
+    config = SafeConfigParser()
+    config.read(CONFIG_FILE)
+    with open(config.get('html', 'opinion_form_path')) as _fd:
+        search_panel = _fd.read()
+    soup = parse('<h4>How did you find theese recipes ?</h4><div></div>', 'lxml')
+    form_group = soup.div
+    form_group['class'] = 'container-fluid'
+    # creating a form for each recipe
+    for recipe in opinion_list:
+        form = parse(search_panel, 'lxml')
+        # hidden info
+        r_id = form.select('input#$recipe_info')[0]
+        r_id['id'] = 'recipe_info_{}'.format(str(recipe['id']))
+        r_id['value'] = str(recipe['id'])
+
+        u_id = form.select('input#$user_info')[0]
+        u_id['id'] = 'user_info_{}'.format(str(recipe['id']))
+        u_id['value'] = str(user_id)
+
+        # the form
+        head = form.select('form#$id_form')[0]
+        head['id'] = '{}_{}_form_head'.format(str(user_id), str(recipe['id']))
+        # the button
+        button = form.select('button#$id_button')[0]
+        button['id'] = '{}_{}_form'.format(str(user_id), str(recipe['id']))
+        # the img
+        img = form.select('img')[0]
+        img['src'] = recipe['img']
+        # the fav button
+        fav_button = form.select('button#$fav_id')[0]
+        fav_button['id'] = 'fav_{}_{}'.format(str(user_id), str(recipe['id']))
+        form_group.append(form)
+    return soup.prettify(formatter='html')
+
+
+def create_favs(user_id):
+    """
+    retrieve the favorites recipes of the user and format them then return them
+    @param user_id the id of the user
+    @return favorites recipes formatted in html
+    """
+    fav_rows = db_execute_out("""
+        SELECT idRecipe
+        FROM user_has_favorite_recipes
+        WHERE idUser LIKE \"{}\";
+    """.format(user_id))
+    if fav_rows == []:
+        return parse("""
+            <h4>Favorite List :</h4><p>No favorite</p>
+        """, 'lxml').prettify(formatter='html')
+    favorite_list = format_recipes([x[0] for x in fav_rows])
+    # constructing the web page part
+    config = SafeConfigParser()
+    config.read(CONFIG_FILE)
+    _fd = open(config.get('html', 'fav_panel'))
+    fav_panel = _fd.read()
+    _fd.close()
+    soup = parse('<h4>Favorite List :</h4><div></div>', 'lxml')
+    panel_group = soup.div
+    panel_group['class'] = 'container-fluid'
+    # creating a panel for each recipe
+    for recipe in favorite_list:
+        panel = parse(fav_panel, 'lxml')
+        # the well
+        well = panel.select('div#$id_fav')[0]
+        well['id'] = 'well_unfav_{}_{}'.format(str(user_id), str(recipe['id']))
+        unfav = panel.select('button#$unfav_id')[0]
+        unfav['id'] = 'unfav_{}_{}'.format(str(user_id), str(recipe['id']))
+        # the img
+        img = panel.select('img#$fav_img')[0]
+        img['id'] = str(recipe['id'])+'_favimg'
+        img['src'] = recipe['img']
+        # the url
+        url = panel.select('a#$fav_url')[0]
+        url['id'] = str(recipe['id'])+'_favurl'
+        url['href'] = recipe['url']
+        panel_group.append(panel)
     return soup.prettify(formatter='html')
 
 
@@ -149,46 +267,6 @@ def add_options_to_form(table_name, form, tag_id):
     with open(form_path, "wb") as _fd:
         _fd.write(html)
 
-
-def create_favs(user_id):
-    """
-    retrieve the favorites recipes of the user and format them then return them
-    @param user_id the id of the user
-    @return favorites recipes formatted in html
-    """
-    fav_rows = db_execute_out("""
-        SELECT idRecipe
-        FROM user_has_favorite_recipes
-        WHERE idUser LIKE \"{}\"
-    """.format(user_id))
-    favorite_list = format_recipes([x[0] for x in fav_rows])
-    # constructing the web page part
-    config = SafeConfigParser()
-    config.read(CONFIG_FILE)
-    _fd = open(config.get('html', 'fav_panel'))
-    fav_panel = _fd.read()
-    _fd.close()
-    soup = parse('<div></div>', 'lxml')
-    panel_group = soup.div
-    panel_group['class'] = 'container-fluid'
-    # creating a panel for each recipe
-    for recipe in favorite_list:
-        panel = parse(fav_panel, 'lxml')
-        # the well
-        well = panel.select('div#$id_fav')[0]
-        well['id'] = str(recipe['id'])+'_fav'
-        # the img
-        img = panel.select('img#$fav_img')[0]
-        img['id'] = str(recipe['id'])+'_favimg'
-        img['src'] = recipe['img']
-        img['width'] = '90%'
-        img['height'] = '90%'
-        # the url
-        url = panel.select('a#$fav_url')[0]
-        url['id'] = str(recipe['id'])+'_favurl'
-        url['href'] = recipe['url']
-        panel_group.append(panel)
-    return soup.prettify(formatter='html')
 
 def get_content(_file):
     """

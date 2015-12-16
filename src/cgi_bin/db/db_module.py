@@ -57,26 +57,16 @@ def db_execute_out(request):
     return data
 
 
-def db_init():
+def db_execute_file(config_option):
     """
-    Create the tables of the database and add the types
+    Create the tables of the database and fill some of them (types, users etc.)
     """
     config = SafeConfigParser()
     config.read(CONFIG_FILE)
     # create tables
-    _fd = open(config.get('database', 'init_file_path'), 'r')
-    sql_requests = _fd.read().split('\n\n')
-    _fd.close()
+    with open(config.get('database', config_option), 'r') as _fd:
+        sql_requests = _fd.read().split('\n\n')
     db_execute_in(sql_requests)
-    # inserting types in the database
-    sql_insert_types = [
-        "INSERT INTO types(name) VALUES ('entree')",
-        "INSERT INTO types(name) VALUES ('main_dish')",
-        "INSERT INTO types(name) VALUES ('dessert')",
-        "INSERT INTO types(name) VALUES ('other')"
-    ]
-    db_execute_in(sql_insert_types)
-
 
 def add_user(mail):
     """

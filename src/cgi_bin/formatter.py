@@ -60,8 +60,8 @@ def format_recipes(recipe_list):
         opinion_rows = db_execute_out("""
             SELECT opinions.mark, opinions.comment, users.email
             FROM opinions
-            INNER JOIN users ON opinions.author LIKE users.id
-            WHERE opinions.author LIKE \"{}\";
+            INNER JOIN users ON opinions.author=users.id
+            WHERE opinions.recipe_id LIKE \"{}\";
         """.format(_row[0]))
         for _op in opinion_rows:
             recipe['opinions'].append({

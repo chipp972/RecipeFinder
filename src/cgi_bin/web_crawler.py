@@ -102,7 +102,13 @@ def get_recipe(url, base):
                 ingr_list = str(i).split('<br/>')
                 ingr_list = clean_ingredients(ingr_list)
 
-    if len(ingr_list) == 0:
+    # image on marmiton
+    _img = ''
+    for i in soup.find_all('a'):
+        if i.get('class') == ['m_content_recette_illu']:
+            _img = i.findChildren()[0].get('src')
+
+    if len(ingr_list) == 0 or _img == '':
         return {
             'url': url,
             'add_urls': _urls
@@ -117,12 +123,6 @@ def get_recipe(url, base):
 
     # type
     _type = determine_type(title)
-
-    # image on marmiton
-    _img = ''
-    for i in soup.find_all('a'):
-        if i.get('class') == ['m_content_recette_illu']:
-            _img = i.findChildren()[0].get('src')
 
     return {
         'url': url,
