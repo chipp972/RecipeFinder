@@ -102,7 +102,13 @@ def get_recipe(url, base):
                 ingr_list = str(i).split('<br/>')
                 ingr_list = clean_ingredients(ingr_list)
 
-    if len(ingr_list) == 0:
+    # image on marmiton
+    _img = ''
+    for i in soup.find_all('a'):
+        if i.get('class') == ['m_content_recette_illu']:
+            _img = i.findChildren()[0].get('src')
+
+    if len(ingr_list) == 0 or _img == '':
         return {
             'url': url,
             'add_urls': _urls
@@ -117,12 +123,6 @@ def get_recipe(url, base):
 
     # type
     _type = determine_type(title)
-
-    # image on marmiton
-    _img = ''
-    for i in soup.find_all('a'):
-        if i.get('class') == ['m_content_recette_illu']:
-            _img = i.findChildren()[0].get('src')
 
     return {
         'url': url,
@@ -225,6 +225,7 @@ def web_crawler(enter_url, limit=20):
 
     # recording all the recipes and ingredients in the database
     db_execute_in(requests)
-    db_execute_in(get_recipe_ingr_request(recipe_info_list))
     add_options_to_form('ingredients', 'search_form_path', 'select#ingr-like')
     add_options_to_form('ingredients', 'search_form_path', 'select#ingr-dislike')
+    requests = get_recipe_ingr_request(recipe_info_list)
+    db_execute_in(requests)

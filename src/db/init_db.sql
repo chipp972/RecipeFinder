@@ -25,8 +25,7 @@ CREATE TABLE users(
 CREATE TABLE search(
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL,
-    recipe_id INTEGER NOT NULL,
-    recipe_position INTEGER NOT NULL,
+    recipe_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(id)
 );
@@ -36,9 +35,9 @@ CREATE TABLE opinions(
 	mark INTEGER,
 	comment TEXT,
 	author INTEGER,
-    recipe INTEGER,
+    recipe_id INTEGER,
 	FOREIGN KEY (author) REFERENCES users(id),
-	FOREIGN KEY (recipe) REFERENCES recipes(id)
+	FOREIGN KEY (recipe_id) REFERENCES recipes(id)
 );
 
 CREATE TABLE recipe_has_ingredients(
@@ -72,3 +71,12 @@ CREATE TABLE search_has_not_ingredients(
 	FOREIGN KEY (idSearch) REFERENCES search(id),
 	FOREIGN KEY (idIngr) REFERENCES ingredients(id)
 );
+
+-- recipe types
+INSERT INTO types(name) VALUES ('entree');
+
+INSERT INTO types(name) VALUES ('main_dish');
+
+INSERT INTO types(name) VALUES ('dessert');
+
+INSERT INTO types(name) VALUES ('other');

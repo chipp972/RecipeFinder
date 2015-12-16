@@ -1,31 +1,38 @@
 <html>
 <body>
-<form class="form-horizontal" role="form" action="../cgi_bin/form.py" method="POST">
-
-<!-- User mail -->
-<div class="form-group">
-  <label class="control-label col-sm-2" for="email">Email:</label>
-  <div class="col-sm-10">
-  <input name="email" type="email" class="form-control" id="email" placeholder="Enter email">
-  </div>
-</div>
+<form id="$id_form" class="form-horizontal opinion" role="form" action="../cgi_bin/ajax_handler.py" method="POST">
 
 <!-- Opinion Form -->
 <div class="form-group">
+<input type="hidden" id="$recipe_info" name="recipe_id" value="">
+<input type="hidden" id="$user_info" name="user_id" value="">
+
+<!-- Image -->
+  <div class="row">
+    <img class="col-sm-12" src="" width="90%" height="90%">
+  </div>
+
 <!-- Mark -->
-  <label for="mark">Mark:</label>
-  <input type="range" min="0" max="10" value="5" id="mark" name="mark"/>
+  <div class="row">
+    <label for="mark">Mark:</label>
+    <input type="range" min="0"
+      max="10" value="5" id="mark" name="mark"/>
+  </div>
 
 <!-- Comment -->
+<div class="row">
   <div class="form-group">
     <label for="comment">Comment:</label>
-    <textarea class="form-control" rows="5" id="comment" name="comment"></textarea>
+    <textarea class="form-control" rows="1" id="comment" name="comment"></textarea>
   </div>
 </div>
 
 <!-- End of Form -->
-<hr>
-<button type="submit" value="Submit" class="btn btn-success btn-block">Submit</button>
+<div class="row">
+  <button id="$fav_id" onclick="fav(id)" class="btn btn-primary" type="button">Favorite</button>
+  <button id="$id_button" type="submit" value="Submit" onclick="send_opinion(id)" class="btn btn-success btn-block">Submit</button>
+</div>
 </form>
+<hr/>
 </body>
 </html>

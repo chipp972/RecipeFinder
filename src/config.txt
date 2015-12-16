@@ -7,7 +7,8 @@ port = 8080
 
 [database]
 path = %(app_dir)s/db/recipe_finder.db
-init_file_path = %(app_dir)s/db/init_db.sql
+init_db_path = %(app_dir)s/db/init_db.sql
+fill_db_path = %(app_dir)s/db/fill_db.sql
 
 [html]
 template_path = %(app_dir)s/www/html/template.html
