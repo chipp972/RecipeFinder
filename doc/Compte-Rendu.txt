@@ -1,5 +1,0 @@
-répartition des tâches :
-
-Luting : Web crawler
-Kevin : Recommandation engine
-Nicolas : Structure du projet et écriture des tests

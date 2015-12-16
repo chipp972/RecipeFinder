@@ -17,8 +17,9 @@ import sys
 # Add the app path to the config file
 CONFIG_FILE = 'config.txt'
 APP_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)))
-CONFIG = SafeConfigParser({'app_dir': APP_DIR})
+CONFIG = SafeConfigParser()
 CONFIG.read(CONFIG_FILE)
+CONFIG.set('DEFAULT', 'app_dir', APP_DIR)
 CONFIG.write(open(CONFIG_FILE, 'wb'))
 
 # Retrieves configs

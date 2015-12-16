@@ -2,17 +2,27 @@
 # -*- coding: utf-8 -*-
 
 """
-recommandation engine script
+recommandation engine script version 2.0
 use user opinion, user favorites or user's searchs to recommand recipes
 """
 
 from db.db_module import db_execute_out
 from formatter import format_recipes
 
-# TODO finish recommandation engine
+# TODO finish recommandation engine v2.0
 def recommander(form):
     """
-    main class of the recommandation engine
+    main class of the recommandation engine :
+    Ordonner une liste de recettes d'après une recommandation sur les utilisateurs :
+    - récupérer toutes les recettes concernées par la recherche
+    - enlever celles que l'utilisateur a déjà visité (table search)
+    - on prend les utilisateurs qui ont une opinion sur la recette ou qui l'ont mis en favoris (équivalent à 10)
+    - on calcule la corrélation entre l'utilisateur cible et les utilisateurs sélectionnées avec leurs notes sur les autres recettes, leurs recettes favorites, les ingrédients qu'ils voulaient et ne voulaient pas dans les recherches
+    - on calcule une note potentielle pour la recette a partir des notes pondérées des utilisateurs sélectionnées
+    - on recommence pour toutes les recettes sélectionnées
+    - on ordonne les recettes d'après leur note
+    - celle qui n'ont pas de note : On random
+    - on retourne la liste
     @param form the informations retrieved from the html form
     @return a list of string containing recipe's ids ordered
     by the recommandation
