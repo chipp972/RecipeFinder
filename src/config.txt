@@ -1,4 +1,5 @@
 [DEFAULT]
+app_dir = C:\Users\pierr_000\Dropbox\Cours\M2\Data_Mining\Project\RecipeFinder\src
 
 [server]
 address = localhost
@@ -15,3 +16,4 @@ search_form_path = %(app_dir)s/www/html/search_form.html
 opinion_form_path = %(app_dir)s/www/html/opinion_form.html
 fav_panel = %(app_dir)s/www/html/fav_panel.html
 recipe_panel = %(app_dir)s/www/html/recipe_panel.html
+

@@ -1,6 +1,5 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*
-
+# -*- coding: utf-8 -*-
 """
 Functions to browse url to determine if there is a recipe
 on the web page and to retrieve the ingredients needed and
@@ -15,6 +14,13 @@ import re
 from db.db_module import db_execute_in, db_execute_out
 from page_builder import add_options_to_form
 
+with open('db/mots_francais.txt') as _fd:
+    FRENCH_DICTIONNARY = _fd.read().split('\n')
+
+# TODO enlever les mots au pluriel
+# vérifier si il n'y a pas des mots dans les ingrédients
+# qui correspondent à des mots du dico
+
 def clean_ingredients(_li):
     """
     clean the ingredients list
@@ -26,8 +32,6 @@ def clean_ingredients(_li):
         i = re.sub(r'  ', '', i)
         i = re.sub(r'<.*?>', '', i)
         i = re.sub(r'\n', '', i)
-        i = unicode(i, 'utf-8')
-        i = unicodedata.normalize('NFD', i).encode('ascii', 'ignore')
         i = re.sub(r'.*:\r', '', i)
         i = re.sub(r'[(].*[)]', '', i)
         i = re.sub(r'\"', '', i)
@@ -37,6 +41,7 @@ def clean_ingredients(_li):
         i = re.sub(r' $', '', i)
         i = re.sub(r'^-? ', '', i)
         i = i.lower()
+        print i
         if i != '':
             new_list.append(i)
     return new_list
@@ -84,7 +89,7 @@ def get_recipe(url, base):
     web_page = urllib2.urlopen(url)
     html = web_page.read()
 
-    soup = parse(html, "lxml")
+    soup = parse(html.decode('utf8', 'replace'), "lxml")
 
     # urls on marmiton
     _urls = []
@@ -118,7 +123,7 @@ def get_recipe(url, base):
     title = soup.title.string
     title = re.sub(r'[\r|\n|\t]*', '', title)
     title = re.sub(r'\"', '', title)
-    title = unicodedata.normalize('NFD', title).encode('ascii', 'ignore')
+    title = unicodedata.normalize('NFD', title).encode('utf8', 'ignore')
 
 
     # type

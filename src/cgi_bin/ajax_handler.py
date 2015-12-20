@@ -9,8 +9,6 @@ give them to the recommandation engine and display the result
 import cgi
 import cgitb
 from db.db_module import db_execute_in
-# from formatter import format_recipes, format_form_result
-# from r_engine import recommander
 import re
 cgitb.enable()
 

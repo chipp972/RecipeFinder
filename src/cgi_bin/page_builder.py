@@ -85,32 +85,17 @@ def create_opinions(user_id):
     @param user_id the id of the user
     @return string containing all the opinion forms
     """
-    # TODO probleme : les opinions ne s'enleve pas lorsque rempli
-    op_rows = db_execute_out("""
-        SELECT recipe_id
-        FROM opinions
-        WHERE author LIKE {};
+    search_rows = db_execute_out("""
+        SELECT DISTINCT recipe_id
+        FROM search
+        WHERE user_id LIKE {0}
+        AND recipe_id NOT NULL
+        AND recipe_id NOT IN (
+            SELECT DISTINCT recipe_id
+            FROM opinions
+            WHERE author LIKE {0}
+        );
     """.format(user_id))
-    if op_rows == []:
-        search_rows = db_execute_out("""
-            SELECT recipe_id
-            FROM search
-            WHERE user_id LIKE {}
-        """.format(user_id))
-    elif len(op_rows[0]) == 1:
-        search_rows = db_execute_out("""
-            SELECT recipe_id
-            FROM search
-            WHERE user_id LIKE {}
-            AND recipe_id NOT LIKE {};
-        """.format(user_id, op_rows[0][0]))
-    else:
-        search_rows = db_execute_out("""
-            SELECT recipe_id
-            FROM search
-            WHERE user_id LIKE {}
-            AND recipe_id NOT IN {};
-        """.format(user_id, (x[0] for x in op_rows[0])))
 
     if search_rows == [] or search_rows is None:
         return parse("""
