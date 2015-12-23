@@ -29,6 +29,7 @@ def clean_ingredients(_li):
     """
     new_list = []
     for i in _li:
+        i = i.lower()
         i = re.sub(r'  ', '', i)
         i = re.sub(r'<.*?>', '', i)
         i = re.sub(r'\n', '', i)
@@ -40,7 +41,6 @@ def clean_ingredients(_li):
         i = re.sub(r'.*d\'', '', i)
         i = re.sub(r' $', '', i)
         i = re.sub(r'^-? ', '', i)
-        i = i.lower()
         print i
         if i != '':
             new_list.append(i)

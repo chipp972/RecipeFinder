@@ -29,6 +29,8 @@ DB_PATH = CONFIG.get('database', 'path')
 
 # url of the recipe site
 BASE_URL = 'http://www.marmiton.org/'
+# https://www.atelierdeschefs.fr/f
+# http://www.odelices.com/
 
 # Create the database if it doesn't exist and modify the search form
 if os.path.isfile(DB_PATH) is False:
