@@ -17,10 +17,6 @@ from page_builder import add_options_to_form
 with open('db/mots_francais.txt') as _fd:
     FRENCH_DICTIONNARY = _fd.read().split('\n')
 
-# TODO enlever les mots au pluriel
-# vérifier si il n'y a pas des mots dans les ingrédients
-# qui correspondent à des mots du dico
-
 def clean_ingredients(_li):
     """
     clean the ingredients list
@@ -41,7 +37,6 @@ def clean_ingredients(_li):
         i = re.sub(r'.*d\'', '', i)
         i = re.sub(r' $', '', i)
         i = re.sub(r'^-? ', '', i)
-        print i
         if i != '':
             new_list.append(i)
     return new_list
